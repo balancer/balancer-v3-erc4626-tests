@@ -17,8 +17,8 @@ import { IVaultForERC4626Test } from "../interfaces/IVaultForERC4626Test.sol";
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
 
-    uint128 constant internal MAX_UINT128 = type(uint128).max;
-    uint256 constant internal BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
+    uint128 internal constant MAX_UINT128 = type(uint128).max;
+    uint256 internal constant BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
 
     // Variables to be defined by setUpForkTestVariables().
     string internal network;
@@ -411,17 +411,17 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function _configurePermit2AndBufferToNetwork() private {
         // Block Numbers are based on the deployment of BufferRouter.
 
-        if (_compareStrings(network,"mainnet")) {
+        if (_compareStrings(network, "mainnet")) {
             blockNumber = 21339384;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9179C06629ef7f17Cb5759F501D89997FE0E7b45);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network,"gnosis")) {
+        } else if (_compareStrings(network, "gnosis")) {
             blockNumber = 37377481;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x86e67E115f96DF37239E0479441303De0de7bc2b);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network,"sepolia")) {
+        } else if (_compareStrings(network, "sepolia")) {
             blockNumber = 7219291;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0xb5F3A41515457CC6E2716c62a011D260441CcfC9);
