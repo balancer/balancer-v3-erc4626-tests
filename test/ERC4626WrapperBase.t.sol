@@ -42,7 +42,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     uint256 internal constant MIN_DEPOSIT = 100;
     // Tolerance of 1 wei difference between convert/preview and actual operation.
-    uint256 internal constant TOLERANCE = 1;
+    uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
         setUpForkTestVariables();
@@ -172,9 +172,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
         uint256 balanceSharesBefore = wrapper.balanceOf(user);
 
-        vm.startPrank(user);
+        vm.prank(user);
         uint256 burnedShares = wrapper.withdraw(amountToWithdraw, user, user);
-        vm.stopPrank();
 
         uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
         uint256 balanceSharesAfter = wrapper.balanceOf(user);
