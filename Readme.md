@@ -1,16 +1,42 @@
 # Balancer V3 ERC4626 Fork Tests
 
-This repository contains tests to make sure an ERC4626 token is supported by Balancer V3 buffers.
-To be supported, an ERC4626 token must have the following properties:
+This repository contains tests to ensure that an ERC4626 token is compatible with Balancer V3 buffers. For 
+compatibility, an ERC4626 token must meet the following requirements:
 
-* Implement all functions from the standard ERC-4626: Tokenized Vaults. The tests will make sure that the following 
-functions are correctly implemented: `asset`, `convertToAssets`, `convertToShares`,`previewDeposit`, `previewMint`,
-`previewWithdraw`, `previewRedeem`, `deposit`, `mint`, `withdraw`, `redeem`;
-* `convert` functions and `preview` functions must have a close result, with a maximum of 1 wei difference;
-* The ERC4626 wrapper should not have a deposit or withdraw fee. If a deposit of `amount` is made, the user should be 
-able to withdraw `amount - 1`;
-* `preview` and actual operation should match perfectly;
-* `deposit` and `redeem` should be EXACT_IN functions. It means, it should take the exact amount of
-tokens passed as argument;
-* `mint` and `withdraw` should be EXACT_OUT functions. It means, it should return to the user the
-exact amount of tokens as the number returned by the function execution.
+## Requirements
+
+1. **Full ERC4626 Compliance**  
+   The token must implement all functions defined by the 
+   [ERC-4626: Tokenized Vaults](https://eips.ethereum.org/EIPS/eip-4626) standard. The tests validate the correct 
+   implementation of the following functions:
+    - `asset`
+    - `convertToAssets`
+    - `convertToShares`
+    - `previewDeposit`
+    - `previewMint`
+    - `previewWithdraw`
+    - `previewRedeem`
+    - `deposit`
+    - `mint`
+    - `withdraw`
+    - `redeem`
+
+2. **No Deposit or Withdraw Fees**  
+   The ERC4626 wrapper should not impose deposit or withdrawal fees. For example:
+    - A deposit of `amount` tokens should allow the user to withdraw at least `amount - 1` tokens.
+
+3. **Accurate Conversions**  
+   The `convert` and `preview` functions must produce results that are close, with a maximum allowable difference of 1 wei.
+
+4. **Preview and Operation Consistency**  
+   The results of `preview` functions must match the outcomes of their corresponding operations precisely.
+
+5. **Exact-Input for Deposit and Redeem**
+    - The `deposit` and `redeem` functions must behave as **EXACT_IN** functions, consuming the exact amount of tokens specified in their input arguments.
+
+6. **Exact-Output for Mint and Withdraw**
+    - The `mint` and `withdraw` functions must behave as **EXACT_OUT** functions, returning the exact number of tokens specified in their output values.
+
+---
+
+This suite of tests ensures ERC4626 tokens integrate seamlessly with Balancer V3 buffers, maintaining high standards for precision and compatibility.
