@@ -16,7 +16,6 @@ on:
 jobs:
   test-forge:
     runs-on: ubuntu-latest
-    needs: lint-and-build
     steps:
       - uses: actions/checkout@v4
       - name: Set up environment
