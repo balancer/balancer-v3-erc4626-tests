@@ -82,8 +82,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     /**
      * @notice Defines network, overrideBlockNumber, wrapper, underlyingDonor and amountToDonate.
-     * @dev Make sure the underlyingDonor has at least amountToDonate underlying tokens, and that the buffer was not
-     * initialized for the ERC4626 token in the current block number.
+     * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens, and
+     * that the buffer was not been initialized for the ERC4626 token in the current block number.
      */
     function setUpForkTestVariables() internal virtual;
 
