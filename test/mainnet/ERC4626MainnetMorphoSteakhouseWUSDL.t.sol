@@ -15,6 +15,7 @@ contract ERC4626MainnetMorphoSteakhouseWUSDLTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "mainnet";
+        overrideBlockNumber = 21573249;
 
         // Morpho's Steakhouse wUSDL
         wrapper = IERC4626(0xbEeFc011e94f43b8B7b455eBaB290C7Ab4E216f1);

@@ -23,6 +23,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     // Variables to be defined by setUpForkTestVariables().
     string internal network;
     uint256 internal blockNumber;
+    uint256 internal overrideBlockNumber;
     IERC4626 internal wrapper;
     address internal underlyingDonor;
     uint256 internal amountToDonate;
@@ -409,19 +410,20 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     function _configurePermit2AndBufferToNetwork() private {
         // Block Numbers are based on the deployment of BufferRouter.
+        // If a test requires a new blockNumber, change it in the test itself. Do not change the values below.
 
         if (_compareStrings(network, "mainnet")) {
-            blockNumber = 21573249;
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 21339384;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9179C06629ef7f17Cb5759F501D89997FE0E7b45);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "gnosis")) {
-            blockNumber = 37377481;
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 37377481;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x86e67E115f96DF37239E0479441303De0de7bc2b);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "sepolia")) {
-            blockNumber = 7219291;
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 7219291;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0xb5F3A41515457CC6E2716c62a011D260441CcfC9);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
