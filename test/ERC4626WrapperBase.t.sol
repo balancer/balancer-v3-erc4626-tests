@@ -22,11 +22,14 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     // Variables to be defined by setUpForkTestVariables().
     string internal network;
-    uint256 internal blockNumber;
+    // Use overrideBlockNumber to specify a block number in a specific test.
     uint256 internal overrideBlockNumber;
     IERC4626 internal wrapper;
     address internal underlyingDonor;
     uint256 internal amountToDonate;
+
+    // blockNumber is used by the base test. To override it, please use overrideBlockNumber.
+    uint256 internal blockNumber;
 
     IBufferRouter internal bufferRouter;
     IVaultForERC4626Test internal vault;
@@ -410,7 +413,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     function _configurePermit2AndBufferToNetwork() private {
         // Block Numbers are based on the deployment of BufferRouter.
-        // If a test requires a new blockNumber, change it in the test itself. Do not change the values below.
+        // IMPORTANT: If a test requires a new blockNumber, change `overrideBlockNumber` in the test itself using the
+        // function `setUpForkTestVariables()`. Do not change the values below, since all tests depend on it.
 
         if (_compareStrings(network, "mainnet")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 21339384;
