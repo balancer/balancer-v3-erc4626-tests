@@ -411,7 +411,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // Block Numbers are based on the deployment of BufferRouter.
 
         if (_compareStrings(network, "mainnet")) {
-            blockNumber = 21339384;
+            blockNumber = 21573249;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9179C06629ef7f17Cb5759F501D89997FE0E7b45);
             vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);

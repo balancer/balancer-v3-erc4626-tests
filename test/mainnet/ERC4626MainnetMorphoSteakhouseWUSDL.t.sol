@@ -17,9 +17,9 @@ contract ERC4626MainnetMorphoSteakhouseWUSDLTest is ERC4626WrapperBaseTest {
         network = "mainnet";
 
         // Morpho's Steakhouse wUSDL
-        wrapper = IERC4626(0xbEEFC01767ed5086f35deCb6C00e6C12bc7476C1);
+        wrapper = IERC4626(0xbEeFc011e94f43b8B7b455eBaB290C7Ab4E216f1);
         // Donor of wUSDL tokens
-        underlyingDonor = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
-        amountToDonate = 1e6 * 1e18;
+        underlyingDonor = 0xbA1333333333a1BA1108E8412f11850A5C319bA9;
+        amountToDonate = 10_000 * 1e18;
     }
 }

@@ -17,9 +17,9 @@ contract ERC4626MainnetMorphoSteakhouseUsdcTest is ERC4626WrapperBaseTest {
         network = "mainnet";
 
         // Morpho's Steakhouse USDC
-        wrapper = IERC4626(0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB);
+        wrapper = IERC4626(0x7204B7Dbf9412567835633B6F00C3Edc3a8D6330);
         // Donor of USDC tokens
-        underlyingDonor = 0x4B16c5dE96EB2117bBE5fd171E4d203624B014aa;
-        amountToDonate = 1e6 * 1e6;
+        underlyingDonor = 0xbA1333333333a1BA1108E8412f11850A5C319bA9;
+        amountToDonate = 10_000 * 1e6;
     }
 }
