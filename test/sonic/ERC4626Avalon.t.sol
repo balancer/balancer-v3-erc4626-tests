@@ -20,7 +20,7 @@ contract ERC4626SonicAvalonTest is ERC4626WrapperBaseTest {
         // Avalon solvBTC
         wrapper = IERC4626(0x7Db17DF22FCF3aF3422c5668c056349e16c487f1);
         // Donor of solvBTC
-        underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-        amountToDonate = 1e4 * 1e18;
+        underlyingDonor = 0x5b0a78dE3350EbC3f3260EC90EB7C4CB2Db58B21;
+        amountToDonate = 10 * 1e18;
     }
 }
