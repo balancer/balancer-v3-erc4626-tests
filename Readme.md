@@ -30,8 +30,8 @@ There are some common errors that occur when testing a token. The step-by-step g
     1. If there is, it's probably reverting because the buffer was already initialized. Choose a block number prior to the buffer initialization and try again.
         1. If the wrapper was recently created, use a block number right after the creation of the wrapper and try again.
         2. If not, try to put an old block number, closer to the Balancer V3 launch (e.g., 21332121 on Mainnet), where the Vault is already there but the buffer was not yet initialized.
-3. Check the asset of the wrapped token (underlying token) and get the holders;
-    1. Check whether the top holder is the one used in the test;
+3. Check the asset of the wrapped token (underlying token) and get the holders.
+    1. Check whether the top holder is the one used in the test.
         1. If it's not, change the holder to the top one. It may be a bit tricky if you're using an old block number. In that case, you would need to iterate over the holders list until you find a holder with sufficient balance at that specific block.
         2. Check whether the holder we're using has enough balance to cover 3 * defaultAmount (i.e., 3e6 * 1e18 if default amount is 1e6 * 1e18).
 4. Finally, if the error persists, try testing it in the [balancer-v3-monorepo](https://github.com/balancer/balancer-v3-monorepo).
