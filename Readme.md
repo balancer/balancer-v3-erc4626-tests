@@ -41,3 +41,7 @@ The `deposit` and `redeem` functions must behave as **EXACT_IN** functions, cons
 ### Exact-Output for Mint and Withdraw
 
 The `mint` and `withdraw` functions must behave as **EXACT_OUT** functions, returning the exact number of tokens specified in their output values.
+
+### Flashloan Incompatibility
+
+In terms of all ERC4626 vaults, there is an [inherent incompatibility](https://docs.morpho.org/morpho-vaults/tutorials/vault-token-asset/) related to flash loans. When an ERC4626 is deposited into a contract that can be flashloaned, an issue arises where a user can frontrun bad debt socialization by flashloaning the shares and then withdrawing them, which amplifies the bad debt. This is limited by the amount available to flashloan AND withdrawable liquidity in the pool.
