@@ -15,7 +15,7 @@ contract ERC4626MainnetMorphoGauntletWethETest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "mainnet";
-        overrideBlockNumber = 21664786;
+        overrideBlockNumber = 21639132;
 
         // Morpho's Gauntlet Weth Ecosystem
         wrapper = IERC4626(0x1e6ffa4e9F63d10B8820A3ab52566Af881Dab53c);
