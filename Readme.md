@@ -26,8 +26,7 @@ implementation of the following functions:
 There are some common errors that may occur when testing a token. The step-by-step below helps to cover most of them.
 
 1. Get the wrapped token address, go to etherscan;
-2. Check if the vault's buffer, in the current block, has liquidity for that token (Use vault explorer's 
-`getBufferBalance` using the wrapped token address as argument to check the liquidity)
+2. Check if the vault's buffer, in the current block, has liquidity for that token (Use vault explorer's `getBufferBalance` using the wrapped token address as argument to check the liquidity)
     1. If there is, it's probably reverting because the buffer is already initialized. Choose a block number prior to the buffer initialization and try again;
         1. If the wrapper was recently created, put a block number right after the creation of the wrapper and test again;
         2. If not, try to put an old block number, closer to Balancer V3 release, where the vault is already there but the buffer is not initialized;
