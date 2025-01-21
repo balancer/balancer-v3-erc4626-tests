@@ -60,6 +60,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         underlyingToken = IERC20(wrapper.asset());
         vm.label(address(underlyingToken), "underlying");
 
+        if (underlyingToken.balanceOf(underlyingDonor) < 3 * amountToDonate) {
+            revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
+        }
+
         underlyingToWrappedFactor = 10 ** (wrapper.decimals() - IERC20Metadata(address(underlyingToken)).decimals());
 
         (user, ) = makeAddrAndKey("User");
@@ -78,6 +82,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
         vm.label(alice, "Alice");
         _initializeWallet(alice);
         _setupAllowance(alice);
+
+        uint256 shares = vault.getBufferTotalShares(wrapper);
+        if (shares > 0) {
+            revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
+        }
     }
 
     /**
