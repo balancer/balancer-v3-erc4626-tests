@@ -19,7 +19,7 @@ contract ERC4626BeefyUsdcSilo is ERC4626WrapperBaseTest {
 
         // Beefy USDC to Silo
         wrapper = IERC4626(0x7870ddFd5ACA4E977B2287e9A212bcbe8FC4135a);
-        // Donor of wS
+        // Donor of USDC.e
         underlyingDonor = 0x4E216C15697C1392fE59e1014B009505E05810Df;
         amountToDonate = 1e6 * 1e6;
     }
