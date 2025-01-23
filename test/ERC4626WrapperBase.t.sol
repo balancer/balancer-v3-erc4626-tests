@@ -101,6 +101,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
         assertEq(userInitialShares, wrapper.balanceOf(user), "User balance of shares is wrong.");
     }
 
+    function testTokenParameters() public view {
+        assertLe(IERC20Metadata(wrapper.asset()).decimals(), 18, "Underlying has more than 18 decimals.");
+        assertLe(wrapper.decimals(), 18, "Wrapper has more than 18 decimals.");
+    }
+
     function testDeposit__Fork__Fuzz(uint256 amountToDeposit) public {
         amountToDeposit = bound(amountToDeposit, MIN_DEPOSIT, userInitialUnderlying);
 
