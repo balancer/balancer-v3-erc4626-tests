@@ -8,18 +8,19 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626SonicSiloV2Test is ERC4626WrapperBaseTest {
+contract ERC4626SonicSiloV2SolvBTCTest is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
     }
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
+        overrideBlockNumber = 5022201;
 
-        // Silo V2's wS
-        wrapper = IERC4626(0x47d8490Be37ADC7Af053322d6d779153689E13C1);
-        // Donor of wS
-        underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-        amountToDonate = 1e4 * 1e18;
+        // Silo V2's solvBTC
+        wrapper = IERC4626(0x87178fe8698C7eDa8aA207083C3d66aEa569aB98);
+        // Donor of solvBTC
+        underlyingDonor = 0x6c56DDcCB3726fAa089A5e9E29b712525Cf916D7;
+        amountToDonate = 50 * 1e18;
     }
 }
