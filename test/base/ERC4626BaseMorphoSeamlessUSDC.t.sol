@@ -15,11 +15,10 @@ contract ERC4626BaseMorphoSeamlessUSDCTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "base";
-        // overrideBlockNumber = ???;
 
         // Morpho Seamless USDC
         wrapper = IERC4626(0x616a4E1db48e22028f6bbf20444Cd3b8e3273738);
-
+        // Donor of USDC tokens
         underlyingDonor = 0xee81B5Afc73Cf528778E0ED98622e434E5eFADb4;
         amountToDonate = 1e6 * 1e6;
     }
