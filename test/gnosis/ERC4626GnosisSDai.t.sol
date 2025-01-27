@@ -11,8 +11,8 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
-import {IBufferRouter} from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
-import {IVault} from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
+import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
+import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
 
 /**
  * @notice sDAI fork tests
