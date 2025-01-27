@@ -6,6 +6,8 @@ env:
   GNOSIS_RPC_URL: ${{ secrets.GNOSIS_RPC_URL }}
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   SONIC_RPC_URL: ${{ secrets.SONIC_RPC_URL }}
+  BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+  ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
 
 on:
   push:
