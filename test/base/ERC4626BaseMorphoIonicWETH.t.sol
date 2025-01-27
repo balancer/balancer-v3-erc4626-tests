@@ -19,7 +19,7 @@ contract ERC4626BaseMorphoIonicWETHTest is ERC4626WrapperBaseTest {
         // Morpho Ionic Ecosystem WETH
         wrapper = IERC4626(0x5A32099837D89E3a794a44fb131CBbAD41f87a8C);
         // Donor of WETH tokens
-        underlyingDonor = 0x46a83dC1a264Bff133dB887023d2884167094837;
-        amountToDonate = 1e1 * 1e18;
+        underlyingDonor = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
+        amountToDonate = 1e3 * 1e18;
     }
 }
