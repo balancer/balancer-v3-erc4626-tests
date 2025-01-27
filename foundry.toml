@@ -31,3 +31,5 @@ max_test_rejects = 60000
   gnosis = "${GNOSIS_RPC_URL}"
   sepolia = "${SEPOLIA_RPC_URL}"
   sonic = "${SONIC_RPC_URL}"
+  base = "${BASE_RPC_URL}"
+  arbitrum = "${ARBITRUM_RPC_URL}"
