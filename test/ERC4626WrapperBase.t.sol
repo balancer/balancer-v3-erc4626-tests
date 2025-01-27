@@ -11,8 +11,8 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
-import { IBufferRouter } from "../interfaces/IBufferRouter.sol";
-import { IVaultForERC4626Test } from "../interfaces/IVaultForERC4626Test.sol";
+import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
+import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
 
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
@@ -32,7 +32,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal blockNumber;
 
     IBufferRouter internal bufferRouter;
-    IVaultForERC4626Test internal vault;
+    IVault internal vault;
     IPermit2 internal permit2;
 
     IERC20 internal underlyingToken;
@@ -435,22 +435,22 @@ abstract contract ERC4626WrapperBaseTest is Test {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 21339384;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9179C06629ef7f17Cb5759F501D89997FE0E7b45);
-            vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "gnosis")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 37377481;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x86e67E115f96DF37239E0479441303De0de7bc2b);
-            vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "sepolia")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 7219291;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0xb5F3A41515457CC6E2716c62a011D260441CcfC9);
-            vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "sonic")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 3842500;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x532dA919D3EB5606b5867A6f505969c57F3A721b);
-            vault = IVaultForERC4626Test(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
         }
