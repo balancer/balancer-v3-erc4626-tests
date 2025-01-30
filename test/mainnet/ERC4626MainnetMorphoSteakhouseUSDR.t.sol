@@ -21,6 +21,6 @@ contract ERC4626MainnetMorphoSteakhouseUsdrTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x30881Baa943777f92DC934d53D3bFdF33382cab3);
         // Donor of USDR tokens
         underlyingDonor = 0x77134cbC06cB00b66F4c7e623D5fdBF6777635EC; // Bitfinex Hot Wallet
-        amountToDonate = 1e6 * 1e6;
+        amountToDonate = 1e4 * 1e6;
     }
 }
