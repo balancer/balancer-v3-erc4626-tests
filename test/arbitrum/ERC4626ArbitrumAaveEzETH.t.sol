@@ -19,8 +19,8 @@ contract ERC4626ArbitrumAaveEzETHTest is ERC4626WrapperBaseTest {
         // Aave's ezETH wrapper
         wrapper = IERC4626(0x4ff50C17df0D1b788d021ACd85039810a1aA68A1);
         // Donor of ezETH tokens
-        underlyingDonor = 0x0dE802e3D6Cc9145A150bBDc8da9F988a98c5202;
-        // 1 ezETH
-        amountToDonate = 1 * 1e18;
+        underlyingDonor = 0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486;
+        // 500 ezETH
+        amountToDonate = 500 * 1e18;
     }
 }
