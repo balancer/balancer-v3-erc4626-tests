@@ -15,7 +15,6 @@ contract ERC4626ArbitrumAaveARBTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "arbitrum";
-        overrideBlockNumber = 300110427;
 
         // Aave's aARB
         wrapper = IERC4626(0xf09EDbF2655B2A56753bD60D22CeAB2AC5D04188);
