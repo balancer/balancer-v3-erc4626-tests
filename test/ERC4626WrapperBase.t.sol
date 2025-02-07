@@ -44,6 +44,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal userInitialUnderlying;
     uint256 internal userInitialShares;
 
+    // Some tokens have specific minimum deposit requirements, and need to override this default value.
     uint256 internal minDeposit = 100;
     // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
@@ -164,8 +165,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
         uint256 balanceSharesAfter = wrapper.balanceOf(user);
 
-        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint is not EXACT_OUT");
-        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint shares do not match");
+        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint assets do not match");
+        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint is not EXACT_OUT");
         assertApproxEqAbs(
             convertedUnderlying,
             depositedUnderlying,

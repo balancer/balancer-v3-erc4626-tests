@@ -12,7 +12,7 @@ contract ERC4626MainnetFluidWethTest is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
 
-        // This token has a minimum amount to deposit and mint, or else it fails.
+        // This token has specific minimum deposit and mint requirements, so we need to override the default here.
         minDeposit = 2e6;
     }
 
