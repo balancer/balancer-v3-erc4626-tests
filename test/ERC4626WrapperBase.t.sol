@@ -45,7 +45,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal userInitialShares;
 
     uint256 internal minDeposit = 100;
-    // Tolerance of 1 wei difference between convert/preview and actual operation.
+    // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
