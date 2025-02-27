@@ -44,8 +44,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal userInitialUnderlying;
     uint256 internal userInitialShares;
 
-    uint256 internal constant MIN_DEPOSIT = 100;
-    // Tolerance of 1 wei difference between convert/preview and actual operation.
+    // Some tokens have specific minimum deposit requirements, and need to override this default value.
+    uint256 internal minDeposit = 100;
+    // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
@@ -107,7 +108,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     }
 
     function testDeposit__Fork__Fuzz(uint256 amountToDeposit) public {
-        amountToDeposit = bound(amountToDeposit, MIN_DEPOSIT, userInitialUnderlying);
+        amountToDeposit = bound(amountToDeposit, minDeposit, userInitialUnderlying);
 
         uint256 convertedShares = wrapper.convertToShares(amountToDeposit);
         uint256 previewedShares = wrapper.previewDeposit(amountToDeposit);
@@ -146,7 +147,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // shares) less a tolerance.
         amountToMint = bound(
             amountToMint,
-            MIN_DEPOSIT * underlyingToWrappedFactor,
+            minDeposit * underlyingToWrappedFactor,
             userInitialShares - (TOLERANCE * underlyingToWrappedFactor)
         );
 
@@ -164,8 +165,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
         uint256 balanceSharesAfter = wrapper.balanceOf(user);
 
-        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint is not EXACT_OUT");
-        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint shares do not match");
+        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint assets do not match");
+        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint is not EXACT_OUT");
         assertApproxEqAbs(
             convertedUnderlying,
             depositedUnderlying,
@@ -183,7 +184,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToWithdraw = bound(amountToWithdraw, MIN_DEPOSIT, userInitialUnderlying - TOLERANCE);
+        amountToWithdraw = bound(amountToWithdraw, minDeposit, userInitialUnderlying - TOLERANCE);
 
         uint256 convertedShares = wrapper.convertToShares(amountToWithdraw);
         uint256 previewedShares = wrapper.previewWithdraw(amountToWithdraw);
@@ -216,7 +217,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function testRedeem__Fork__Fuzz(uint256 amountToRedeem) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToRedeem = bound(amountToRedeem, MIN_DEPOSIT * underlyingToWrappedFactor, userInitialShares - TOLERANCE);
+        amountToRedeem = bound(amountToRedeem, minDeposit * underlyingToWrappedFactor, userInitialShares - TOLERANCE);
 
         uint256 convertedAssets = wrapper.convertToAssets(amountToRedeem);
         uint256 previewedAssets = wrapper.previewRedeem(amountToRedeem);
