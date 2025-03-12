@@ -15,6 +15,7 @@ contract ERC4626GnosisAaveEureTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "gnosis";
+        overrideBlockNumber = 39000690;
 
         // Aave's EURe
         wrapper = IERC4626(0x417bc5b940475203A18C2f320a5ba470D6c5E463);
