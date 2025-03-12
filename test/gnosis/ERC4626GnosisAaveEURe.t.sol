@@ -21,6 +21,6 @@ contract ERC4626GnosisAaveEureTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x417bc5b940475203A18C2f320a5ba470D6c5E463);
         // Donor of EURe
         underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-        amountToDonate = 5 * 1e6;
+        amountToDonate = 1e5 * 1e6;
     }
 }
