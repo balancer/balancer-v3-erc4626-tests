@@ -20,7 +20,7 @@ contract ERC4626SonicAaveWETHTest is ERC4626WrapperBaseTest {
         // Aave WS
         wrapper = IERC4626(0xeB5e9B0ae5bb60274786C747A1A2A798c11271E0);
         // Donor of WS
-        underlyingDonor = 0x3bcE5CB273F0F148010BbEa2470e7b5df84C7812;
+        underlyingDonor = 0xe18Ab82c81E7Eecff32B8A82B1b7d2d23F1EcE96;
         amountToDonate = 1e3 * 1e18;
     }
 }
