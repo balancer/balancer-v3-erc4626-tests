@@ -15,7 +15,7 @@ contract ERC4626SonicAaveWETHTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 12031248;
+        overrideBlockNumber = 13405152;
 
         // Aave WS
         wrapper = IERC4626(0xeB5e9B0ae5bb60274786C747A1A2A798c11271E0);
