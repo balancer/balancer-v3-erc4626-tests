@@ -15,11 +15,11 @@ contract ERC4626VicunaVaultSTS is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 13631382;
+        overrideBlockNumber = 14985046;
 
-        // Vicuna USDT vault
-        wrapper = IERC4626(0xd2C390d663a5D9504366D280A8Fc40B02A0417D8);
-        // Donor of USDT
+        // Vicuna STS vault
+        wrapper = IERC4626(0xD553da01CFe9d47EFd9353e759940151995Ac5Eb);
+        // Donor of STS
         underlyingDonor = 0x396922EF30Cf012973343f7174db850c7D265278;
         amountToDonate = 1e4 * 1e18;
     }
