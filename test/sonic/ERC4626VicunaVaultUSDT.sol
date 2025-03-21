@@ -15,7 +15,7 @@ contract ERC4626VicunaVaultUSDT is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 14985046;
+        overrideBlockNumber = 14985047;
 
         // Vicuna USDT vault
         wrapper = IERC4626(0xf54b4C59a7F3590dF0d6F312F9D41F10EE42f72c);
