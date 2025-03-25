@@ -15,10 +15,10 @@ contract ERC4626VicunaVaultUSDCE is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 15586437;
+        overrideBlockNumber = 15814743;
 
         // Vicuna USDCE vault
-        wrapper = IERC4626(0x62b12a64020834E6368a776aE874DAD80a069a0C);
+        wrapper = IERC4626(0xef23FdCbd9b36Ed99A6C51CaA83Af549c36601CF);
         // Donor of USDCE
         underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
         amountToDonate = 1e6 * 1e6;
