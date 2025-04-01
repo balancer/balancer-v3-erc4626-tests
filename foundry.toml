@@ -33,3 +33,4 @@ max_test_rejects = 60000
   sonic = "${SONIC_RPC_URL}"
   base = "${BASE_RPC_URL}"
   arbitrum = "${ARBITRUM_RPC_URL}"
+  avalanche = "${AVALANCHE_RPC_URL}"
