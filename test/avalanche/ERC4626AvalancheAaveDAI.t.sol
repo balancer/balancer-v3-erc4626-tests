@@ -8,7 +8,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626AvalancheAaveUSDCTest is ERC4626WrapperBaseTest {
+contract ERC4626AvalancheAaveDAITest is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
     }
@@ -17,10 +17,10 @@ contract ERC4626AvalancheAaveUSDCTest is ERC4626WrapperBaseTest {
         network = "avalanche";
         overrideBlockNumber = 59394164;
 
-        // Aave's aUSDC
-        wrapper = IERC4626(0xe1bFC96d95BAdCB10Ff013Cb0C9C6c737ca07009);
-        // Donor of USDC tokens
-        underlyingDonor = 0x9f8c163cBA728e99993ABe7495F06c0A3c8Ac8b9;
-        amountToDonate = 10000 * 1e6;
+        // Aave's aDAI
+        wrapper = IERC4626(0xC38aD3527A4B821BF437639cBA8Bf567BFa63A13);
+        // Donor of DAI tokens
+        underlyingDonor = 0x835866d37AFB8CB8F8334dCCdaf66cf01832Ff5D;
+        amountToDonate = 10000 * 1e18;
     }
 }
