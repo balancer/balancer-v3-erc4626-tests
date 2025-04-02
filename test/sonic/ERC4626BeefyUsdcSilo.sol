@@ -10,6 +10,9 @@ import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626BeefyUsdcSilo is ERC4626WrapperBaseTest {
     function setUp() public override {
+        // The Beefy USDC silo is failing on Sonic because the mint function is not EXACT_OUT. The error is small,
+        // 1 wei, and occurs just in very specific cases. Beefy is working in a new wrapper, but meanwhile we will
+        // disable the test to don't cause CI failures in unrelated PRs.
         vm.skip(true);
         ERC4626WrapperBaseTest.setUp();
     }
