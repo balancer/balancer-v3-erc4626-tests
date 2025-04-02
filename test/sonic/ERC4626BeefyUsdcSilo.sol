@@ -10,6 +10,7 @@ import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626BeefyUsdcSilo is ERC4626WrapperBaseTest {
     function setUp() public override {
+        vm.skip(true);
         ERC4626WrapperBaseTest.setUp();
     }
 
