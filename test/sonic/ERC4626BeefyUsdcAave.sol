@@ -8,16 +8,16 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626BeefyUsdcSilo is ERC4626WrapperBaseTest {
+contract ERC4626BeefyUsdcAave is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
     }
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 5046915;
+        overrideBlockNumber = 17711097;
 
-        // Beefy USDC to Silo
+        // Beefy USDC to Aave
         wrapper = IERC4626(0x00476804bcC4024057E5EbC9e8Eb74d641a6b665);
         // Donor of USDC.e
         underlyingDonor = 0x4E216C15697C1392fE59e1014B009505E05810Df;
