@@ -462,6 +462,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(network, "optimism")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 133969440;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
         }
