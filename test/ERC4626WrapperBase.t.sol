@@ -138,6 +138,13 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Mint _at least_ previewed shares.
+        assertGe(
+            mintedShares,
+            previewedShares,
+            "Minted shares is lower than converted minted"
+        );
     }
 
     function testMint__Fork__Fuzz(uint256 amountToMint) public {
@@ -179,6 +186,13 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Deposit _at most_ `previewedUnderlying`.
+        assertGe(
+            previewedUnderlying,
+            depositedUnderlying,
+            "Previewed underlying is lower than converted deposited"
+        );
     }
 
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
@@ -211,6 +225,13 @@ abstract contract ERC4626WrapperBaseTest is Test {
             burnedShares,
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
+        );
+
+        // Burn _at most_ previewed shares.
+        assertGe(
+            previewedShares,
+            burnedShares,
+            "Previewed shares is lower than converted burned"
         );
     }
 
@@ -245,6 +266,13 @@ abstract contract ERC4626WrapperBaseTest is Test {
             withdrawnAssets,
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
+        );
+
+        // Withdraw _at least_ `previewedAssets`.
+        assertGe(
+            withdrawnAssets,
+            previewedAssets,
+            "Previewed assets is lower than converted withdrawn"
         );
     }
 
