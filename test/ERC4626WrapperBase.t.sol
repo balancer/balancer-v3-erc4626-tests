@@ -140,11 +140,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         );
 
         // Mint _at least_ previewed shares.
-        assertGe(
-            mintedShares,
-            previewedShares,
-            "Minted shares is lower than converted minted"
-        );
+        assertGe(mintedShares, previewedShares, "Minted shares is lower than converted minted");
     }
 
     function testMint__Fork__Fuzz(uint256 amountToMint) public {
@@ -188,11 +184,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         );
 
         // Deposit _at most_ `previewedUnderlying`.
-        assertGe(
-            previewedUnderlying,
-            depositedUnderlying,
-            "Previewed underlying is lower than converted deposited"
-        );
+        assertGe(previewedUnderlying, depositedUnderlying, "Previewed underlying is lower than converted deposited");
     }
 
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
@@ -228,11 +220,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         );
 
         // Burn _at most_ previewed shares.
-        assertGe(
-            previewedShares,
-            burnedShares,
-            "Previewed shares is lower than converted burned"
-        );
+        assertGe(previewedShares, burnedShares, "Previewed shares is lower than converted burned");
     }
 
     function testRedeem__Fork__Fuzz(uint256 amountToRedeem) public {
@@ -269,11 +257,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         );
 
         // Withdraw _at least_ `previewedAssets`.
-        assertGe(
-            withdrawnAssets,
-            previewedAssets,
-            "Previewed assets is lower than converted withdrawn"
-        );
+        assertGe(withdrawnAssets, previewedAssets, "Previewed assets is lower than converted withdrawn");
     }
 
     function testAddLiquidityToBuffer__Fork__Fuzz(
@@ -487,6 +471,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(network, "arbitrum")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 300880872;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(network, "optimism")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 133970000;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
