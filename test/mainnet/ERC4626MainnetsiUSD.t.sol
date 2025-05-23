@@ -8,7 +8,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626MainnetsiUSDTest is ERC4626WrapperBaseTest {
+contract ERC4626MainnetFluidUsdtTest is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
     }
@@ -16,10 +16,10 @@ contract ERC4626MainnetsiUSDTest is ERC4626WrapperBaseTest {
     function setUpForkTestVariables() internal override {
         network = "mainnet";
 
-        // s iUSD
-        wrapper = IERC4626(0xDBDC1Ef57537E34680B898E1FEBD3D68c7389bCB);
-        // Donor of iUSD
-        underlyingDonor = 0x9e8b926A0EB276eB380fb8282eA20c2A2faea967;
-        amountToDonate = 1e6 * 1e18;
+        // Fluid's USDT
+        wrapper = IERC4626(0x5C20B550819128074FD538Edf79791733ccEdd18);
+        // Donor of USDT
+        underlyingDonor = 0xF977814e90dA44bFA03b6295A0616a897441aceC;
+        amountToDonate = 1e6 * 1e6;
     }
 }
