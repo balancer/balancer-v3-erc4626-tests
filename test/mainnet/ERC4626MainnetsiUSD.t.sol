@@ -17,9 +17,9 @@ contract ERC4626MainnetsiUSDTest is ERC4626WrapperBaseTest {
         network = "mainnet";
         overrideBlockNumber = 22545890;
 
-        // Fluid's USDT
+        // Staked iUSD USDT
         wrapper = IERC4626(0xDBDC1Ef57537E34680B898E1FEBD3D68c7389bCB);
-        // Donor of USDT
+        // Donor of iUSD
         underlyingDonor = 0x9e8b926A0EB276eB380fb8282eA20c2A2faea967;
         amountToDonate = 1e3 * 1e18;
     }
