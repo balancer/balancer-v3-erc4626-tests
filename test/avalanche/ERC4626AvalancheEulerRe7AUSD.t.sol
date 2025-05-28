@@ -21,6 +21,6 @@ contract ERC4626AvalancheEulerRe7AUSDTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x2137568666f12fc5A026f5430Ae7194F1C1362aB);
         // Donor of AUSD tokens
         underlyingDonor = 0x190D94613A09ad7931FcD17CD6A8F9B6B47ad414;
-        amountToDonate = 10000 * 1e6;
+        amountToDonate = 1e6 * 1e6;
     }
 }

@@ -21,6 +21,6 @@ contract ERC4626AvalancheAaveLINKTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x61933AF56431280EE4e5667133D8aF6322D64B32);
         // Donor of LINK tokens
         underlyingDonor = 0x4e9f683A27a6BdAD3FC2764003759277e93696e6;
-        amountToDonate = 10000 * 1e18;
+        amountToDonate = 1e4 * 1e18;
     }
 }

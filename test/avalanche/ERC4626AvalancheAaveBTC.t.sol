@@ -21,6 +21,6 @@ contract ERC4626AvalancheAaveBTCTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x2d324fD1Ca86D90f61B0965d2db2f86d22eA4B74);
         // Donor of wbtc tokens
         underlyingDonor = 0x8ffDf2DE812095b1D19CB146E4c004587C0A0692;
-        amountToDonate = 100 * 1e8;
+        amountToDonate = 1e3 * 1e8;
     }
 }

@@ -21,6 +21,6 @@ contract ERC4626AvalancheAaveUSDCTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0xe1bFC96d95BAdCB10Ff013Cb0C9C6c737ca07009);
         // Donor of USDC tokens
         underlyingDonor = 0x9f8c163cBA728e99993ABe7495F06c0A3c8Ac8b9;
-        amountToDonate = 10000 * 1e6;
+        amountToDonate = 1e7 * 1e6;
     }
 }
