@@ -20,7 +20,9 @@ contract ERC4626AvalancheAaveAAVETest is ERC4626WrapperBaseTest {
         // Aave's aAAVE
         wrapper = IERC4626(0x7883978D1F322641a3AaA82Bac3b0a6Dee7A171E);
         // Donor of AAVE tokens
-        underlyingDonor = 0xD45B7c061016102f9FA220502908f2c0f1add1D7;
-        amountToDonate = 100 * 1e18;
+        // Note: The aAAVE token fails to mint and deposit if amountToDonate > 981 AAVE tokens. (Donor has enough
+        // liquidity)
+        underlyingDonor = 0xf329e36C7bF6E5E86ce2150875a84Ce77f477375;
+        amountToDonate = 981 * 1e18;
     }
 }
