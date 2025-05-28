@@ -28,6 +28,6 @@ contract ERC4626SonicSiloV2USDC36Test is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x11Ba70c0EBAB7946Ac84F0E6d79162b0cBb2693f);
         // Donor of usdc
         underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
-        amountToDonate = 1e6 * 1e6;
+        amountToDonate = 5e7 * 1e6;
     }
 }
