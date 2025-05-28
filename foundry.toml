@@ -34,3 +34,4 @@ max_test_rejects = 60000
   base = "${BASE_RPC_URL}"
   optimism = "${OPTIMISM_RPC_URL}"
   arbitrum = "${ARBITRUM_RPC_URL}"
+  avalanche = "${AVALANCHE_RPC_URL}"
