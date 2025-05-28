@@ -474,6 +474,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(network, "avalanche")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 59388800;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x6817149cb753BF529565B4D023d7507eD2ff4Bc0);
+            vault = IVault(0xba1333333333cbcdB5D83c2e5d1D898E07eD00Dc);
         } else if (_compareStrings(network, "optimism")) {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 133970000;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
