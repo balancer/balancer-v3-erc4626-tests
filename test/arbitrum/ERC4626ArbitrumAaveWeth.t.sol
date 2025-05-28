@@ -15,6 +15,7 @@ contract ERC4626ArbitrumAaveWethTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "arbitrum";
+        overrideBlockNumber = 300110427;
 
         // Aave's aWETH
         wrapper = IERC4626(0x4cE13a79f45C1Be00BdABD38B764aC28C082704E);
