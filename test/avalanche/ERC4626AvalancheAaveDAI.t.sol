@@ -21,6 +21,6 @@ contract ERC4626AvalancheAaveDAITest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0xC38aD3527A4B821BF437639cBA8Bf567BFa63A13);
         // Donor of DAI tokens
         underlyingDonor = 0x835866d37AFB8CB8F8334dCCdaf66cf01832Ff5D;
-        amountToDonate = 10000 * 1e18;
+        amountToDonate = 1e6 * 1e18;
     }
 }

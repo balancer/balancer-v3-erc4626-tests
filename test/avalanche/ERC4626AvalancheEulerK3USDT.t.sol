@@ -20,7 +20,9 @@ contract ERC4626AvalancheEulerK3USDTTest is ERC4626WrapperBaseTest {
         // Euler USDT
         wrapper = IERC4626(0xa446938b0204Aa4055cdFEd68Ddf0E0d1BAB3E9E);
         // Donor of USDT tokens
-        underlyingDonor = 0x4aeFa39caEAdD662aE31ab0CE7c8C2c9c0a013E8;
-        amountToDonate = 10000 * 1e6;
+        // Note: The aUSDT token fails to mint and deposit if amountToDonate > 4e5 USDT tokens. (Donor has enough
+        // liquidity)
+        underlyingDonor = 0x5754284f345afc66a98fbB0a0Afe71e0F007B949;
+        amountToDonate = 4e5 * 1e6;
     }
 }
