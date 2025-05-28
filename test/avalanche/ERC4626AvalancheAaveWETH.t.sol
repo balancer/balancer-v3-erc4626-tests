@@ -20,7 +20,7 @@ contract ERC4626AvalancheAaveWETHTest is ERC4626WrapperBaseTest {
         // Aave's aWETH
         wrapper = IERC4626(0xdFD2b2437a94108323045C282fF1916de5Ac6Af7);
         // Donor of WETH tokens
-        underlyingDonor = 0x66A5dE11d1e1F20da825D974453f099C4Bb13647;
-        amountToDonate = 20 * 1e18;
+        underlyingDonor = 0xe50fA9b3c56FfB159cB0FCA61F5c9D750e8128c8;
+        amountToDonate = 100 * 1e18;
     }
 }
