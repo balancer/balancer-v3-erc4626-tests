@@ -20,7 +20,7 @@ contract ERC4626AvalancheEulerRe7USDCTest is ERC4626WrapperBaseTest {
         // Eurler USDC
         wrapper = IERC4626(0x39dE0f00189306062D79eDEC6DcA5bb6bFd108f9);
         // Donor of USDC tokens
-        underlyingDonor = 0x625E7708f30cA75bfd92586e17077590C60eb4cD;
-        amountToDonate = 10000 * 1e6;
+        underlyingDonor = 0x9f8c163cBA728e99993ABe7495F06c0A3c8Ac8b9;
+        amountToDonate = 1e7 * 1e6;
     }
 }
