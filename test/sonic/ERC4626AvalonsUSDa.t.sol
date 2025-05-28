@@ -15,12 +15,12 @@ contract ERC4626SonicAvalonsUSDaTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 11804781;
+        overrideBlockNumber = 21804781;
 
         // Avalon sUSDa
         wrapper = IERC4626(0x1Bf08B4f49E6aeAa0a59C241d74Fe1DDB8327693);
         // Donor of solvBTC
-        underlyingDonor = 0x91Aee6cC85Ab68A02C288F8d8e7A4F5A704Ad746;
+        underlyingDonor = 0x32f8E5d3F4039d1DF89B6A1e544288289A500Fd1;
         amountToDonate = 10 * 1e18;
     }
 }
