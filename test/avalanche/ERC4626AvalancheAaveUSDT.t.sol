@@ -20,7 +20,9 @@ contract ERC4626AvalancheAaveUSDTTest is ERC4626WrapperBaseTest {
         // Aave's aUSDT
         wrapper = IERC4626(0x59933c571d200dc6A7Fd1CDa22495dB442082E34);
         // Donor of USDT tokens
-        underlyingDonor = 0x4aeFa39caEAdD662aE31ab0CE7c8C2c9c0a013E8;
-        amountToDonate = 10000 * 1e6;
+        // Note: The aUSDT token fails to mint and deposit if amountToDonate > 2e7 USDT tokens. (Donor has enough
+        // liquidity)
+        underlyingDonor = 0x5754284f345afc66a98fbB0a0Afe71e0F007B949;
+        amountToDonate = 2e7 * 1e6;
     }
 }

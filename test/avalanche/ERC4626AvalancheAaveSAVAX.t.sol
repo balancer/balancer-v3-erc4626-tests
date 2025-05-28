@@ -21,6 +21,6 @@ contract ERC4626AvalancheAaveSAVAXTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x7D0394F8898fBA73836Bf12bD606228887705895);
         // Donor of SAVAX tokens
         underlyingDonor = 0xF362feA9659cf036792c9cb02f8ff8198E21B4cB;
-        amountToDonate = 1000 * 1e18;
+        amountToDonate = 1e5 * 1e18;
     }
 }

@@ -20,7 +20,9 @@ contract ERC4626AvalancheAaveAUSDTest is ERC4626WrapperBaseTest {
         // Aave's aAUSD
         wrapper = IERC4626(0x45cf39EeB437FA95Bb9b52c0105254a6BD25D01e);
         // Donor of AUSD tokens
+        // Note: The aAUSD token fails to mint and deposit if amountToDonate > 8e5 AUSD tokens. (Donor has enough
+        // liquidity)
         underlyingDonor = 0x190D94613A09ad7931FcD17CD6A8F9B6B47ad414;
-        amountToDonate = 10000 * 1e6;
+        amountToDonate = 8e5 * 1e6;
     }
 }
