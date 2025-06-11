@@ -21,6 +21,8 @@ contract ERC4626BaseWrappedExtraFiXBaseUSRTest is ERC4626WrapperBaseTest {
         wrapper = IERC4626(0x98eFe85735F253a0ed0Be8e2915ff39f9e4AfF0F);
         // Donor of USR tokens
         underlyingDonor = 0x4665d514e82B2F9c78Fa2B984e450F33d9efc842;
+        // The `deposit` function fails with an amount greater than 1e4 * 1e18, because of a boundary in the wrapped
+        // token.
         amountToDonate = 1e4 * 1e18;
     }
 }
