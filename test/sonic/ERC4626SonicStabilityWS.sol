@@ -8,7 +8,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626SonicStabilityscUSDTest is ERC4626WrapperBaseTest {
+contract ERC4626SonicStabilityWSTest is ERC4626WrapperBaseTest {
     function setUp() public override {
         ERC4626WrapperBaseTest.setUp();
     }
@@ -17,10 +17,10 @@ contract ERC4626SonicStabilityscUSDTest is ERC4626WrapperBaseTest {
         network = "sonic";
         overrideBlockNumber = 33536213;
 
-        // Stability scUSD
-        wrapper = IERC4626(0xccccCCcca9FC69a2b32408730011EdB3205A93A1);
-        // Donor of scUSD
-        underlyingDonor = 0xe6605932e4a686534D19005BB9dB0FBA1F101272;
-        amountToDonate = 1e6 * 1e6;
+        // Stability WS
+        wrapper = IERC4626(0xffFFFFFf2fcBeFAe12F1372C56edC769BD411685);
+        // Donor of ws
+        underlyingDonor = 0x6C5E14A212c1C3e4Baf6f871ac9B1a969918c131;
+        amountToDonate = 1e6 * 1e18;
     }
 }

@@ -15,7 +15,7 @@ contract ERC4626SonicStabilityUsdcTest is ERC4626WrapperBaseTest {
 
     function setUpForkTestVariables() internal override {
         network = "sonic";
-        overrideBlockNumber = 30141969;
+        overrideBlockNumber = 33536213;
 
         // Stability USDC
         wrapper = IERC4626(0xEEEEEEE6d95E55A468D32FeB5d6648754d10A967);
