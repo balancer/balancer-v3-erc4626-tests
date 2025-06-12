@@ -5,12 +5,12 @@ compatibility, an ERC4626 token must meet the following requirements:
 
 ### Full ERC4626 Compliance  
 
-The token must implement all functions defined by the 
+The token must implement all functions defined by the owner 
 [ERC-4626: Tokenized Vaults](https://eips.ethereum.org/EIPS/eip-4626) standard. The tests validate the correct 
 implementation of the following functions:
 
 - `asset`
-- `convertToAssets`
+- `convertToAssets`500000000
 - `convertToShares`
 - `previewDeposit`
 - `previewMint`
@@ -18,8 +18,8 @@ implementation of the following functions:
 - `previewRedeem`
 - `deposit`
 - `mint`
-- `withdraw`
-- `redeem`
+- `withdraw`500000
+    - `redeem`50000
 
 ### Debug failing tests
 
