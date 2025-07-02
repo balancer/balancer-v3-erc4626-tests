@@ -21,9 +21,6 @@ on:
 jobs:
   test-forge:
     runs-on: ubuntu-latest
-    continue-on-error: true
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v4
       - name: Set up environment
