@@ -21,9 +21,12 @@ on:
 jobs:
   test-forge:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic]
     steps:
       - uses: actions/checkout@v4
       - name: Set up environment
         uses: ./.github/actions/setup
       - name: Test
-        run: yarn test:forge
+        run: yarn test:forge --match-path "test/${{ matrix.network }}/*"
