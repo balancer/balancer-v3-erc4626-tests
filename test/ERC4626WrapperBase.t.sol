@@ -44,8 +44,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal userInitialUnderlying;
     uint256 internal userInitialShares;
 
-    uint256 internal constant MIN_DEPOSIT = 100;
-    // Tolerance of 1 wei difference between convert/preview and actual operation.
+    // Some tokens have specific minimum deposit requirements, and need to override this default value.
+    uint256 internal minDeposit = 100;
+    // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
@@ -107,7 +108,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     }
 
     function testDeposit__Fork__Fuzz(uint256 amountToDeposit) public {
-        amountToDeposit = bound(amountToDeposit, MIN_DEPOSIT, userInitialUnderlying);
+        amountToDeposit = bound(amountToDeposit, minDeposit, userInitialUnderlying);
 
         uint256 convertedShares = wrapper.convertToShares(amountToDeposit);
         uint256 previewedShares = wrapper.previewDeposit(amountToDeposit);
@@ -137,6 +138,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Mint _at least_ previewed shares.
+        assertGe(mintedShares, previewedShares, "Minted shares is lower than converted minted");
     }
 
     function testMint__Fork__Fuzz(uint256 amountToMint) public {
@@ -146,7 +150,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // shares) less a tolerance.
         amountToMint = bound(
             amountToMint,
-            MIN_DEPOSIT * underlyingToWrappedFactor,
+            minDeposit * underlyingToWrappedFactor,
             userInitialShares - (TOLERANCE * underlyingToWrappedFactor)
         );
 
@@ -164,8 +168,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
         uint256 balanceSharesAfter = wrapper.balanceOf(user);
 
-        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint is not EXACT_OUT");
-        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint shares do not match");
+        assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint assets do not match");
+        assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint is not EXACT_OUT");
         assertApproxEqAbs(
             convertedUnderlying,
             depositedUnderlying,
@@ -178,12 +182,15 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Deposit _at most_ `previewedUnderlying`.
+        assertGe(previewedUnderlying, depositedUnderlying, "Previewed underlying is lower than converted deposited");
     }
 
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToWithdraw = bound(amountToWithdraw, MIN_DEPOSIT, userInitialUnderlying - TOLERANCE);
+        amountToWithdraw = bound(amountToWithdraw, minDeposit, userInitialUnderlying - TOLERANCE);
 
         uint256 convertedShares = wrapper.convertToShares(amountToWithdraw);
         uint256 previewedShares = wrapper.previewWithdraw(amountToWithdraw);
@@ -211,12 +218,15 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Burn _at most_ previewed shares.
+        assertGe(previewedShares, burnedShares, "Previewed shares is lower than converted burned");
     }
 
     function testRedeem__Fork__Fuzz(uint256 amountToRedeem) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToRedeem = bound(amountToRedeem, MIN_DEPOSIT * underlyingToWrappedFactor, userInitialShares - TOLERANCE);
+        amountToRedeem = bound(amountToRedeem, minDeposit * underlyingToWrappedFactor, userInitialShares - TOLERANCE);
 
         uint256 convertedAssets = wrapper.convertToAssets(amountToRedeem);
         uint256 previewedAssets = wrapper.previewRedeem(amountToRedeem);
@@ -245,6 +255,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
             TOLERANCE,
             "Preview and actual operation difference is higher than tolerance"
         );
+
+        // Withdraw _at least_ `previewedAssets`.
+        assertGe(withdrawnAssets, previewedAssets, "Previewed assets is lower than converted withdrawn");
     }
 
     function testAddLiquidityToBuffer__Fork__Fuzz(
@@ -455,6 +468,21 @@ abstract contract ERC4626WrapperBaseTest is Test {
             blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 25458827;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(network, "arbitrum")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 300880872;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(network, "avalanche")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 59388800;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x6817149cb753BF529565B4D023d7507eD2ff4Bc0);
+            vault = IVault(0xba1333333333cbcdB5D83c2e5d1D898E07eD00Dc);
+        } else if (_compareStrings(network, "optimism")) {
+            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 133970000;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
