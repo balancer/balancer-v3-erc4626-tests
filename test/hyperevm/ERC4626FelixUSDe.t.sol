@@ -22,6 +22,6 @@ contract ERC4626FelixUSDeTest is ERC4626WrapperBaseTest {
 
         // Donor of USDe
         underlyingDonor = 0x68e37dE8d93d3496ae143F2E900490f6280C57cD;
-        amountToDonate = 2 * 1e18;
+        amountToDonate = 1e5 * 1e18;
     }
 }
