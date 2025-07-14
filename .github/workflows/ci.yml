@@ -10,6 +10,7 @@ env:
   ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
   AVALANCHE_RPC_URL: ${{ secrets.AVALANCHE_RPC_URL }}
   OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+  HYPEREVM_RPC_URL: ${{ secrets.HYPEREVM_RPC_URL }}
 
 on:
   push:
@@ -23,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic]
+        network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm]
     steps:
       - uses: actions/checkout@v4
       - name: Set up environment
