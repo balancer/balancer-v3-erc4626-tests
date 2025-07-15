@@ -10,6 +10,7 @@ import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveUSDCeTest is ERC4626WrapperBaseTest {
     function _setupFork() internal override returns (ForkState memory forkState) {
+        // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "arbitrum";
         forkState.blockNumber = 300110427;
     }
