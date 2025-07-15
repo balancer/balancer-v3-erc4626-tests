@@ -102,19 +102,22 @@ abstract contract ERC4626WrapperBaseTest is Test {
      * initialized for the ERC4626 token in the current block number.
      * @return forkState The network and block number to fork.
      */
-    function _setupFork() internal virtual returns (ForkState memory);
+    function _setupFork() internal pure virtual returns (ForkState memory);
 
     /**
-     * @notice Defines wrapper, underlyingDonor and amountToDonate.
-     * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens.
+     * @notice Defines wrapper, underlyingDonor, amountToDonate and minDeposit.
+     * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens. If
+     * `minDeposit` is 0, the test will assume the value 100.
+     *
      * @return wrapper The ERC4626 wrapper
      * @return underlyingDonor The owner of the liquidity in underlying token amounts
      * @return amountToDonate The amount that the owner will donate for each user (lp, alice, user)
+     * @return minDeposit The minimum amount of underlying tokens to deposit (some tokens require it)
      */
     function _setUpForkTestVariables()
         internal
         virtual
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate);
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256 minDeposit);
 
     function testPreConditions() public view {
         assertEq(userInitialUnderlying, amountToDonate / 2, "User balance of underlying is wrong.");

@@ -9,7 +9,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626AvalancheAaveWAVAXTest is ERC4626WrapperBaseTest {
-    function _setupFork() internal override returns (ForkState memory forkState) {
+    function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "avalanche";
         forkState.blockNumber = 59394164;
@@ -17,8 +17,9 @@ contract ERC4626AvalancheAaveWAVAXTest is ERC4626WrapperBaseTest {
 
     function _setUpForkTestVariables()
         internal
+        pure
         override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate)
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
     {
         // Aave's aWAVAX
         wrapper = IERC4626(0xD7da0De6Ef4f51d6206bF2A35fCd2030F54c3F7B);
