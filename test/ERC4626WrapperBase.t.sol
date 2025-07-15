@@ -14,6 +14,17 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
 import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
 
+struct ForkState {
+    string network;
+    uint256 blockNumber;
+}
+
+struct ERC4626SetupState {
+    IERC4626 wrapper;
+    address underlyingDonor;
+    uint256 amountToDonate;
+}
+
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
 
@@ -50,13 +61,15 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
-        setUpForkTestVariables();
+        ForkState memory forkState = _setupFork(forkState);
 
-        _configurePermit2AndBufferToNetwork();
+        forkState = _configurePermit2AndBufferToNetwork(forkState);
+
+        vm.createSelectFork({ blockNumber: forkState.blockNumber, urlOrAlias: forkState.network });
+
+        (wrapper, underlyingDonor, amountToDonate) = _setUpForkTestVariables();
 
         vm.label(address(wrapper), "wrapper");
-
-        vm.createSelectFork({ blockNumber: blockNumber, urlOrAlias: network });
 
         underlyingToken = IERC20(wrapper.asset());
         vm.label(address(underlyingToken), "underlying");
@@ -91,11 +104,23 @@ abstract contract ERC4626WrapperBaseTest is Test {
     }
 
     /**
-     * @notice Defines network, overrideBlockNumber, wrapper, underlyingDonor and amountToDonate.
-     * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens, and
-     * that the buffer was not been initialized for the ERC4626 token in the current block number.
+     * @notice Defines network and overrideBlockNumber.
+     * @dev Make sure the the buffer was not been initialized for the ERC4626 token in the current block number.
+     * @return forkState The network and block number to fork.
      */
-    function setUpForkTestVariables() internal virtual;
+    function _setupFork() internal virtual returns (ForkState memory);
+
+    /**
+     * @notice Defines wrapper, underlyingDonor and amountToDonate.
+     * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens.
+     * @return wrapper The ERC4626 wrapper
+     * @return underlyingDonor The owner of the liquidity in underlying token amounts
+     * @return amountToDonate The amount that the owner will donate for each user (lp, alice, user)
+     */
+    function _setUpForkTestVariables()
+        internal
+        virtual
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate);
 
     function testPreConditions() public view {
         assertEq(userInitialUnderlying, amountToDonate / 2, "User balance of underlying is wrong.");
@@ -439,59 +464,61 @@ abstract contract ERC4626WrapperBaseTest is Test {
         vm.stopPrank();
     }
 
-    function _configurePermit2AndBufferToNetwork() private {
+    function _configurePermit2AndBufferToNetwork(ForkState memory forkState) private returns (ForkState memory) {
         // Block Numbers are based on the deployment of BufferRouter.
         // IMPORTANT: If a test requires a new blockNumber, change `overrideBlockNumber` in the test itself using the
         // function `setUpForkTestVariables()`. Do not change the values below, since all tests depend on it.
 
-        if (_compareStrings(network, "mainnet")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 21339384;
+        if (_compareStrings(forkState.network, "mainnet")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 21339384;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9179C06629ef7f17Cb5759F501D89997FE0E7b45);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "gnosis")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 37377481;
+        } else if (_compareStrings(forkState.network, "gnosis")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 37377481;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x86e67E115f96DF37239E0479441303De0de7bc2b);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "sepolia")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 7219291;
+        } else if (_compareStrings(forkState.network, "sepolia")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 7219291;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0xb5F3A41515457CC6E2716c62a011D260441CcfC9);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "sonic")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 3842500;
+        } else if (_compareStrings(forkState.network, "sonic")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 3842500;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x532dA919D3EB5606b5867A6f505969c57F3A721b);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "base")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 25458827;
+        } else if (_compareStrings(forkState.network, "base")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 25458827;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "arbitrum")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 300880872;
+        } else if (_compareStrings(forkState.network, "arbitrum")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 300880872;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "avalanche")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 59388800;
+        } else if (_compareStrings(forkState.network, "avalanche")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 59388800;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x6817149cb753BF529565B4D023d7507eD2ff4Bc0);
             vault = IVault(0xba1333333333cbcdB5D83c2e5d1D898E07eD00Dc);
-        } else if (_compareStrings(network, "optimism")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 133970000;
+        } else if (_compareStrings(forkState.network, "optimism")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 133970000;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x311334883921Fb1b813826E585dF1C2be4358615);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
-        } else if (_compareStrings(network, "hyperevm")) {
-            blockNumber = overrideBlockNumber != 0 ? overrideBlockNumber : 8062650;
+        } else if (_compareStrings(forkState.network, "hyperevm")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 8062650;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9805dcfD25e6De36bad8fe9D3Fe2c9b44B764102);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
         }
+
+        return forkState;
     }
 
     function _compareStrings(string memory a, string memory b) private pure returns (bool) {
