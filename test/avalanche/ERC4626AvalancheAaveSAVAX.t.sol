@@ -6,17 +6,20 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626AvalancheAaveSAVAXTest is ERC4626WrapperBaseTest {
-    function setUp() public override {
-        ERC4626WrapperBaseTest.setUp();
+    function _setupFork() internal override returns (ForkState memory forkState) {
+        // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
+        forkState.network = "avalanche";
+        forkState.blockNumber = 59394164;
     }
 
-    function setUpForkTestVariables() internal override {
-        network = "avalanche";
-        overrideBlockNumber = 59394164;
-
+    function _setUpForkTestVariables()
+        internal
+        override
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate)
+    {
         // Aave's aSAVAX
         wrapper = IERC4626(0x7D0394F8898fBA73836Bf12bD606228887705895);
         // Donor of SAVAX tokens
