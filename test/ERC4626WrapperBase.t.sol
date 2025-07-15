@@ -34,6 +34,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
     IERC4626 internal wrapper;
     address internal underlyingDonor;
     uint256 internal amountToDonate;
+    // Some tokens have specific minimum deposit requirements, and need to override this default value.
+    uint256 internal minDeposit;
 
     IBufferRouter internal bufferRouter;
     IVault internal vault;
@@ -48,8 +50,6 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal userInitialUnderlying;
     uint256 internal userInitialShares;
 
-    // Some tokens have specific minimum deposit requirements, and need to override this default value.
-    uint256 internal minDeposit = 100;
     // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
 
@@ -60,7 +60,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.createSelectFork({ blockNumber: forkState.blockNumber, urlOrAlias: forkState.network });
 
-        (wrapper, underlyingDonor, amountToDonate) = _setUpForkTestVariables();
+        (wrapper, underlyingDonor, amountToDonate, minDeposit) = _setUpForkTestVariables();
+        // minDeposit is an optional parameter, used only when the wrapper requires a minimum amount of underlying to
+        // be deposited. If not set by the setup function, the test will assume the value 100.
+        minDeposit = minDeposit == 0 ? 100 : minDeposit;
 
         vm.label(address(wrapper), "wrapper");
 
