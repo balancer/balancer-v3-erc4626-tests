@@ -31,11 +31,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint128 internal constant _MAX_UINT128 = type(uint128).max;
     uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
 
-    IERC4626 internal wrapper;
-    address internal underlyingDonor;
-    uint256 internal amountToDonate;
+    IERC4626 private wrapper;
+    address private underlyingDonor;
+    uint256 private amountToDonate;
     // Some tokens have specific minimum deposit requirements, and need to override this default value.
-    uint256 internal minDeposit;
+    uint256 private minDeposit;
 
     IBufferRouter internal bufferRouter;
     IVault internal vault;
