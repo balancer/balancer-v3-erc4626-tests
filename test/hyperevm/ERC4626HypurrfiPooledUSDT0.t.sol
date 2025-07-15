@@ -34,7 +34,7 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
     }
 
     function deployStatAToken(address underlying) internal returns (address) {
-        IPool pool = IPool(0x980BDd9cF1346800F6307E3B2301fFd3ce8C7523); //IPool(0xceCcE0EB9DD2Ef7996e01e25DD70e461F918A14b);
+        IPool pool = IPool(0xceCcE0EB9DD2Ef7996e01e25DD70e461F918A14b); // IPool(0x980BDd9cF1346800F6307E3B2301fFd3ce8C7523);
         vm.etch(address(pool), address(new PoolStorageMock()).code);
         vm.etch(address(underlying), address(new PoolStorageMock()).code);
         PoolStorageMock(address(pool)).logStorage(0, 500);
