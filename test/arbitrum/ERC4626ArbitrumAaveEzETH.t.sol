@@ -6,16 +6,18 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveEzETHTest is ERC4626WrapperBaseTest {
-    function setUp() public override {
-        ERC4626WrapperBaseTest.setUp();
+    function _setupFork() internal override returns (ForkState memory forkState) {
+        forkState.network = "arbitrum";
     }
 
-    function setUpForkTestVariables() internal override {
-        network = "arbitrum";
-
+    function _setUpForkTestVariables()
+        internal
+        override
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate)
+    {
         // Aave's ezETH wrapper
         wrapper = IERC4626(0x4ff50C17df0D1b788d021ACd85039810a1aA68A1);
         // Donor of ezETH tokens

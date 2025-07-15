@@ -28,19 +28,12 @@ struct ERC4626SetupState {
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
 
-    uint128 internal constant MAX_UINT128 = type(uint128).max;
-    uint256 internal constant BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
+    uint128 internal constant _MAX_UINT128 = type(uint128).max;
+    uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
 
-    // Variables to be defined by setUpForkTestVariables().
-    string internal network;
-    // Use overrideBlockNumber to specify a block number in a specific test.
-    uint256 internal overrideBlockNumber;
     IERC4626 internal wrapper;
     address internal underlyingDonor;
     uint256 internal amountToDonate;
-
-    // blockNumber is used by the base test. To override it, please use overrideBlockNumber.
-    uint256 internal blockNumber;
 
     IBufferRouter internal bufferRouter;
     IVault internal vault;
@@ -61,7 +54,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint256 internal constant TOLERANCE = 2;
 
     function setUp() public virtual {
-        ForkState memory forkState = _setupFork(forkState);
+        ForkState memory forkState = _setupFork();
 
         forkState = _configurePermit2AndBufferToNetwork(forkState);
 
@@ -104,8 +97,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
     }
 
     /**
-     * @notice Defines network and overrideBlockNumber.
-     * @dev Make sure the the buffer was not been initialized for the ERC4626 token in the current block number.
+     * @notice Defines network and blockNumber.
+     * @dev The test assigns a default block number if no block number is given. Make sure the the buffer was not been
+     * initialized for the ERC4626 token in the current block number.
      * @return forkState The network and block number to fork.
      */
     function _setupFork() internal virtual returns (ForkState memory);
@@ -292,11 +286,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
     ) public {
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _BUFFER_MINIMUM_TOTAL_SUPPLY,
             underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
-        sharesToIssue = bound(sharesToIssue, BUFFER_MINIMUM_TOTAL_SUPPLY, underlyingToken.balanceOf(lp) / 2);
+        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
+        sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, underlyingToken.balanceOf(lp) / 2);
 
         vm.prank(lp);
         bufferRouter.initializeBuffer(wrapper, underlyingToInitialize, wrappedToInitialize, 0);
@@ -307,8 +301,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         vm.prank(lp);
         (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
             wrapper,
-            MAX_UINT128,
-            MAX_UINT128,
+            _MAX_UINT128,
+            _MAX_UINT128,
             sharesToIssue
         );
 
@@ -333,10 +327,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
     ) public {
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _BUFFER_MINIMUM_TOTAL_SUPPLY,
             underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
+        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
 
         vm.prank(lp);
         uint256 lpShares = bufferRouter.initializeBuffer(wrapper, underlyingToInitialize, wrappedToInitialize, 0);
@@ -376,12 +370,12 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 initToAddFactor = 1000;
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _BUFFER_MINIMUM_TOTAL_SUPPLY,
             underlyingToken.balanceOf(lp) / initToAddFactor
         );
         wrappedToInitialize = bound(
             wrappedToInitialize,
-            BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _BUFFER_MINIMUM_TOTAL_SUPPLY,
             wrapper.balanceOf(lp) / initToAddFactor
         );
 
@@ -393,8 +387,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
         vm.prank(alice);
         (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
             wrapper,
-            MAX_UINT128,
-            MAX_UINT128,
+            _MAX_UINT128,
+            _MAX_UINT128,
             sharesToIssueAndRemove
         );
 
