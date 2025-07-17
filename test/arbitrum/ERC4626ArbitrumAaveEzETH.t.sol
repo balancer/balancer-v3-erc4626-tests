@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveEzETHTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -14,17 +14,12 @@ contract ERC4626ArbitrumAaveEzETHTest is ERC4626WrapperBaseTest {
         forkState.network = "arbitrum";
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's ezETH wrapper
-        wrapper = IERC4626(0x4ff50C17df0D1b788d021ACd85039810a1aA68A1);
+        erc4626State.wrapper = IERC4626(0x4ff50C17df0D1b788d021ACd85039810a1aA68A1);
         // Donor of ezETH tokens
-        underlyingDonor = 0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486;
+        erc4626State.underlyingDonor = 0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486;
         // 500 ezETH
-        amountToDonate = 500 * 1e18;
+        erc4626State.amountToDonate = 500 * 1e18;
     }
 }

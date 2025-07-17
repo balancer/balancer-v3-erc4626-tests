@@ -20,9 +20,12 @@ struct ForkState {
 }
 
 struct ERC4626SetupState {
+    IERC20 underlyingToken;
     IERC4626 wrapper;
     address underlyingDonor;
     uint256 amountToDonate;
+    uint256 minDeposit;
+    uint256 underlyingToWrappedFactor;
 }
 
 abstract contract ERC4626WrapperBaseTest is Test {
@@ -31,24 +34,17 @@ abstract contract ERC4626WrapperBaseTest is Test {
     uint128 internal constant _MAX_UINT128 = type(uint128).max;
     uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
 
-    IERC4626 private wrapper;
-    address private underlyingDonor;
-    uint256 private amountToDonate;
-    // Some tokens have specific minimum deposit requirements, and need to override this default value.
-    uint256 private minDeposit;
-
     IBufferRouter internal bufferRouter;
     IVault internal vault;
     IPermit2 internal permit2;
 
-    IERC20 internal underlyingToken;
-    uint256 internal underlyingToWrappedFactor;
+    ERC4626SetupState internal $;
+    uint256 private userInitialUnderlying;
+    uint256 private userInitialShares;
 
     address internal alice;
     address internal lp;
     address internal user;
-    uint256 internal userInitialUnderlying;
-    uint256 internal userInitialShares;
 
     // Tolerance between convert/preview and the actual operation.
     uint256 internal constant TOLERANCE = 2;
@@ -60,28 +56,30 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.createSelectFork({ blockNumber: forkState.blockNumber, urlOrAlias: forkState.network });
 
-        (wrapper, underlyingDonor, amountToDonate, minDeposit) = _setUpForkTestVariables();
-        // minDeposit is an optional parameter, used only when the wrapper requires a minimum amount of underlying to
+        $ = _setUpForkTestVariables();
+        // $.minDeposit is an optional parameter, used only when the wrapper requires a minimum amount of underlying to
         // be deposited. If not set by the setup function, the test will assume the value 100.
-        minDeposit = minDeposit == 0 ? 100 : minDeposit;
+        $.minDeposit = $.minDeposit == 0 ? 100 : $.minDeposit;
 
-        vm.label(address(wrapper), "wrapper");
+        vm.label(address($.wrapper), "wrapper");
 
-        underlyingToken = IERC20(wrapper.asset());
-        vm.label(address(underlyingToken), "underlying");
+        $.underlyingToken = IERC20($.wrapper.asset());
+        vm.label(address($.underlyingToken), "underlying");
 
-        if (underlyingToken.balanceOf(underlyingDonor) < 3 * amountToDonate) {
+        if (underlyingToken.balanceOf($.underlyingDonor) < 3 * $.amountToDonate) {
             revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
         }
 
-        underlyingToWrappedFactor = 10 ** (wrapper.decimals() - IERC20Metadata(address(underlyingToken)).decimals());
+        $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
+            ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
+            : $.underlyingToWrappedFactor;
 
         (user, ) = makeAddrAndKey("User");
         vm.label(user, "User");
         _initializeWallet(user);
 
-        userInitialUnderlying = underlyingToken.balanceOf(user);
-        userInitialShares = wrapper.balanceOf(user);
+        userInitialUnderlying = $.underlyingToken.balanceOf(user);
+        userInitialShares = $.wrapper.balanceOf(user);
 
         (lp, ) = makeAddrAndKey("lp");
         vm.label(lp, "lp");
@@ -93,7 +91,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         _initializeWallet(alice);
         _setupAllowance(alice);
 
-        uint256 shares = vault.getBufferTotalShares(wrapper);
+        uint256 shares = vault.getBufferTotalShares($.wrapper);
         if (shares > 0) {
             revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
         }
@@ -108,46 +106,40 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function _setupFork() internal pure virtual returns (ForkState memory);
 
     /**
-     * @notice Defines wrapper, underlyingDonor, amountToDonate and minDeposit.
+     * @notice Defines wrapper, underlyingDonor, amountToDonate and other test variables.
      * @dev Make sure the underlyingDonor has at least 3 times the amountToDonate amount in underlying tokens. If
      * `minDeposit` is 0, the test will assume the value 100.
      *
-     * @return wrapper The ERC4626 wrapper
-     * @return underlyingDonor The owner of the liquidity in underlying token amounts
-     * @return amountToDonate The amount that the owner will donate for each user (lp, alice, user)
-     * @return minDeposit The minimum amount of underlying tokens to deposit (some tokens require it)
+     * @return erc4626State The wrapper, underlyingDonor, amountToDonate and other test variables.
      */
-    function _setUpForkTestVariables()
-        internal
-        virtual
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256 minDeposit);
+    function _setUpForkTestVariables() internal virtual returns (ERC4626SetupState memory erc4626State);
 
     function testPreConditions() public view {
-        assertEq(userInitialUnderlying, amountToDonate / 2, "User balance of underlying is wrong.");
-        assertEq(userInitialShares, wrapper.balanceOf(user), "User balance of shares is wrong.");
+        assertEq(userInitialUnderlying, $.amountToDonate / 2, "User balance of underlying is wrong.");
+        assertEq(userInitialShares, $.wrapper.balanceOf(user), "User balance of shares is wrong.");
     }
 
     function testTokenParameters() public view {
-        assertLe(IERC20Metadata(wrapper.asset()).decimals(), 18, "Underlying has more than 18 decimals.");
-        assertLe(wrapper.decimals(), 18, "Wrapper has more than 18 decimals.");
+        assertLe(IERC20Metadata($.wrapper.asset()).decimals(), 18, "Underlying has more than 18 decimals.");
+        assertLe($.wrapper.decimals(), 18, "Wrapper has more than 18 decimals.");
     }
 
     function testDeposit__Fork__Fuzz(uint256 amountToDeposit) public {
-        amountToDeposit = bound(amountToDeposit, minDeposit, userInitialUnderlying);
+        amountToDeposit = bound(amountToDeposit, $.minDeposit, userInitialUnderlying);
 
-        uint256 convertedShares = wrapper.convertToShares(amountToDeposit);
-        uint256 previewedShares = wrapper.previewDeposit(amountToDeposit);
+        uint256 convertedShares = $.wrapper.convertToShares(amountToDeposit);
+        uint256 previewedShares = $.wrapper.previewDeposit(amountToDeposit);
 
-        uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
-        uint256 balanceSharesBefore = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingBefore = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesBefore = $.wrapper.balanceOf(user);
 
         vm.startPrank(user);
-        underlyingToken.forceApprove(address(wrapper), amountToDeposit);
-        uint256 mintedShares = wrapper.deposit(amountToDeposit, user);
+        $.underlyingToken.forceApprove(address($.wrapper), amountToDeposit);
+        uint256 mintedShares = $.wrapper.deposit(amountToDeposit, user);
         vm.stopPrank();
 
-        uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
-        uint256 balanceSharesAfter = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingAfter = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesAfter = $.wrapper.balanceOf(user);
 
         assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - amountToDeposit, "Deposit is not EXACT_IN");
         assertEq(balanceSharesAfter, balanceSharesBefore + mintedShares, "Deposit minted shares do not match");
@@ -175,23 +167,23 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // shares) less a tolerance.
         amountToMint = bound(
             amountToMint,
-            minDeposit * underlyingToWrappedFactor,
-            userInitialShares - (TOLERANCE * underlyingToWrappedFactor)
+            $.minDeposit * $.underlyingToWrappedFactor,
+            userInitialShares - (TOLERANCE * $.underlyingToWrappedFactor)
         );
 
-        uint256 convertedUnderlying = wrapper.convertToAssets(amountToMint);
-        uint256 previewedUnderlying = wrapper.previewMint(amountToMint);
+        uint256 convertedUnderlying = $.wrapper.convertToAssets(amountToMint);
+        uint256 previewedUnderlying = $.wrapper.previewMint(amountToMint);
 
-        uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
-        uint256 balanceSharesBefore = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingBefore = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesBefore = $.wrapper.balanceOf(user);
 
         vm.startPrank(user);
-        underlyingToken.forceApprove(address(wrapper), previewedUnderlying);
-        uint256 depositedUnderlying = wrapper.mint(amountToMint, user);
+        $.underlyingToken.forceApprove(address($.wrapper), previewedUnderlying);
+        uint256 depositedUnderlying = $.wrapper.mint(amountToMint, user);
         vm.stopPrank();
 
-        uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
-        uint256 balanceSharesAfter = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingAfter = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesAfter = $.wrapper.balanceOf(user);
 
         assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore - depositedUnderlying, "Mint assets do not match");
         assertEq(balanceSharesAfter, balanceSharesBefore + amountToMint, "Mint is not EXACT_OUT");
@@ -215,10 +207,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToWithdraw = bound(amountToWithdraw, minDeposit, userInitialUnderlying - TOLERANCE);
+        amountToWithdraw = bound(amountToWithdraw, $.minDeposit, userInitialUnderlying - TOLERANCE);
 
-        uint256 convertedShares = wrapper.convertToShares(amountToWithdraw);
-        uint256 previewedShares = wrapper.previewWithdraw(amountToWithdraw);
+        uint256 convertedShares = $.wrapper.convertToShares(amountToWithdraw);
+        uint256 previewedShares = $.wrapper.previewWithdraw(amountToWithdraw);
 
         uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
         uint256 balanceSharesBefore = wrapper.balanceOf(user);
@@ -251,20 +243,24 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function testRedeem__Fork__Fuzz(uint256 amountToRedeem) public {
         // When user deposited to underlying, a round down may occur and remove some wei. So, makes sure
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
-        amountToRedeem = bound(amountToRedeem, minDeposit * underlyingToWrappedFactor, userInitialShares - TOLERANCE);
+        amountToRedeem = bound(
+            amountToRedeem,
+            $.minDeposit * $.underlyingToWrappedFactor,
+            userInitialShares - TOLERANCE
+        );
 
-        uint256 convertedAssets = wrapper.convertToAssets(amountToRedeem);
-        uint256 previewedAssets = wrapper.previewRedeem(amountToRedeem);
+        uint256 convertedAssets = $.wrapper.convertToAssets(amountToRedeem);
+        uint256 previewedAssets = $.wrapper.previewRedeem(amountToRedeem);
 
-        uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
-        uint256 balanceSharesBefore = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingBefore = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesBefore = $.wrapper.balanceOf(user);
 
         vm.startPrank(user);
-        uint256 withdrawnAssets = wrapper.redeem(amountToRedeem, user, user);
+        uint256 withdrawnAssets = $.wrapper.redeem(amountToRedeem, user, user);
         vm.stopPrank();
 
-        uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
-        uint256 balanceSharesAfter = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingAfter = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesAfter = $.wrapper.balanceOf(user);
 
         assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore + withdrawnAssets, "Redeem is not EXACT_IN");
         assertEq(balanceSharesAfter, balanceSharesBefore - amountToRedeem, "Redeem burned shares do not match");
@@ -295,18 +291,18 @@ abstract contract ERC4626WrapperBaseTest is Test {
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
             underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
-        sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, underlyingToken.balanceOf(lp) / 2);
+        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
+        sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.underlyingToken.balanceOf(lp) / 2);
 
         vm.prank(lp);
-        bufferRouter.initializeBuffer(wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+        bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
         // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
         // value returned by initializeBuffer;
-        uint256 totalShares = vault.getBufferTotalShares(wrapper);
+        uint256 totalShares = vault.getBufferTotalShares($.wrapper);
 
         vm.prank(lp);
         (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
-            wrapper,
+            $.wrapper,
             _MAX_UINT128,
             _MAX_UINT128,
             sharesToIssue
@@ -336,19 +332,19 @@ abstract contract ERC4626WrapperBaseTest is Test {
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
             underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, wrapper.balanceOf(lp) / 10);
+        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
 
         vm.prank(lp);
-        uint256 lpShares = bufferRouter.initializeBuffer(wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+        uint256 lpShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
         // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
         // value returned by initializeBuffer;
-        uint256 totalShares = vault.getBufferTotalShares(wrapper);
+        uint256 totalShares = vault.getBufferTotalShares($.wrapper);
 
         sharesToRemove = bound(sharesToRemove, 0, lpShares);
 
         vm.prank(lp);
         (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
-            wrapper,
+            $.wrapper,
             sharesToRemove,
             0,
             0
@@ -382,17 +378,17 @@ abstract contract ERC4626WrapperBaseTest is Test {
         wrappedToInitialize = bound(
             wrappedToInitialize,
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            wrapper.balanceOf(lp) / initToAddFactor
+            $.wrapper.balanceOf(lp) / initToAddFactor
         );
 
         vm.prank(lp);
-        uint256 initShares = bufferRouter.initializeBuffer(wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+        uint256 initShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
 
         sharesToIssueAndRemove = bound(sharesToIssueAndRemove, 0, initShares * initToAddFactor);
 
         vm.prank(alice);
         (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
-            wrapper,
+            $.wrapper,
             _MAX_UINT128,
             _MAX_UINT128,
             sharesToIssueAndRemove
@@ -400,7 +396,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.prank(alice);
         (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
-            wrapper,
+            $.wrapper,
             sharesToIssueAndRemove,
             0,
             0
@@ -412,55 +408,55 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
     function testPreviewDepositRounding__Fork__Fuzz(uint256 amount) public view {
         amount = bound(amount, 1, 100_000_000e18);
-        uint256 previewRoundDown = wrapper.previewDeposit(amount - 1);
+        uint256 previewRoundDown = $.wrapper.previewDeposit(amount - 1);
         vm.assume(previewRoundDown > 0);
         previewRoundDown -= 1;
-        uint256 preview = wrapper.previewDeposit(amount);
+        uint256 preview = $.wrapper.previewDeposit(amount);
         assertLe(previewRoundDown, preview, "Preview round down does not match expectations");
     }
 
     function testPreviewMintRounding__Fork__Fuzz(uint256 amount) public view {
         amount = bound(amount, 0, 100_000_000e18);
-        uint256 previewRoundUp = wrapper.previewMint(amount + 1) + 1;
-        uint256 preview = wrapper.previewMint(amount);
+        uint256 previewRoundUp = $.wrapper.previewMint(amount + 1) + 1;
+        uint256 preview = $.wrapper.previewMint(amount);
         assertGe(previewRoundUp, preview, "Preview round up does not match expectations");
     }
 
     function testPreviewRedeemRounding__Fork__Fuzz(uint256 amount) public view {
         amount = bound(amount, 1, 100_000_000e18);
-        uint256 previewRoundDown = wrapper.previewRedeem(amount - 1);
+        uint256 previewRoundDown = $.wrapper.previewRedeem(amount - 1);
         vm.assume(previewRoundDown > 0);
         previewRoundDown -= 1;
-        uint256 preview = wrapper.previewRedeem(amount);
+        uint256 preview = $.wrapper.previewRedeem(amount);
         assertLe(previewRoundDown, preview, "Preview round down does not match expectations");
     }
 
     function testPreviewWithdrawRounding__Fork__Fuzz(uint256 amount) public view {
         amount = bound(amount, 0, 100_000_000e18);
-        uint256 previewRoundUp = wrapper.previewWithdraw(amount + 1) + 1;
-        uint256 preview = wrapper.previewWithdraw(amount);
+        uint256 previewRoundUp = $.wrapper.previewWithdraw(amount + 1) + 1;
+        uint256 preview = $.wrapper.previewWithdraw(amount);
         assertGe(previewRoundUp, preview, "Preview round up does not match expectations");
     }
 
     function _initializeWallet(address receiver) private {
-        uint256 initialDeposit = amountToDonate / 2;
+        uint256 initialDeposit = $.amountToDonate / 2;
 
         vm.prank(underlyingDonor);
-        underlyingToken.safeTransfer(receiver, amountToDonate);
+        $.underlyingToken.safeTransfer(receiver, $.amountToDonate);
 
         vm.startPrank(receiver);
-        underlyingToken.forceApprove(address(wrapper), initialDeposit);
-        wrapper.deposit(initialDeposit, receiver);
+        $.underlyingToken.forceApprove(address($.wrapper), initialDeposit);
+        $.wrapper.deposit(initialDeposit, receiver);
         vm.stopPrank();
     }
 
     function _setupAllowance(address sender) private {
         vm.startPrank(sender);
-        underlyingToken.forceApprove(address(permit2), type(uint256).max);
-        wrapper.approve(address(permit2), type(uint256).max);
+        $.underlyingToken.forceApprove(address(permit2), type(uint256).max);
+        $.wrapper.approve(address(permit2), type(uint256).max);
 
-        permit2.approve(address(underlyingToken), address(bufferRouter), type(uint160).max, type(uint48).max);
-        permit2.approve(address(wrapper), address(bufferRouter), type(uint160).max, type(uint48).max);
+        permit2.approve(address($.underlyingToken), address(bufferRouter), type(uint160).max, type(uint48).max);
+        permit2.approve(address($.wrapper), address(bufferRouter), type(uint160).max, type(uint48).max);
         vm.stopPrank();
     }
 

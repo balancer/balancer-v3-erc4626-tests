@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveWeETHTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626ArbitrumAaveWeETHTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 300110427;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's aWeETH
-        wrapper = IERC4626(0xD9E3Ef2c12de90E3b03F7b7E3964956a71920d40);
+        erc4626State.wrapper = IERC4626(0xD9E3Ef2c12de90E3b03F7b7E3964956a71920d40);
         // Donor of WeETH tokens
-        underlyingDonor = 0xa6C895EB332E91c5b3D00B7baeEAae478cc502DA;
-        amountToDonate = 1e3 * 1e18;
+        erc4626State.underlyingDonor = 0xa6C895EB332E91c5b3D00B7baeEAae478cc502DA;
+        erc4626State.amountToDonate = 1e3 * 1e18;
     }
 }

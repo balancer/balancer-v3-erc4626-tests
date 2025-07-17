@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveLINKTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626ArbitrumAaveLINKTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 300110427;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's aLINK
-        wrapper = IERC4626(0xEAB84053B99f2ec4433F5121A1CB1524c8c998F8);
+        erc4626State.wrapper = IERC4626(0xEAB84053B99f2ec4433F5121A1CB1524c8c998F8);
         // Donor of LINK tokens
-        underlyingDonor = 0x7f1fa204bb700853D36994DA19F830b6Ad18455C;
-        amountToDonate = 1e5 * 1e18;
+        erc4626State.underlyingDonor = 0x7f1fa204bb700853D36994DA19F830b6Ad18455C;
+        erc4626State.amountToDonate = 1e5 * 1e18;
     }
 }

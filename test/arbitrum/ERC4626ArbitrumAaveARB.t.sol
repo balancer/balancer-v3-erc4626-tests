@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626ArbitrumAaveARBTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -14,16 +14,11 @@ contract ERC4626ArbitrumAaveARBTest is ERC4626WrapperBaseTest {
         forkState.network = "arbitrum";
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's aARB
-        wrapper = IERC4626(0xf09EDbF2655B2A56753bD60D22CeAB2AC5D04188);
+        erc4626State.wrapper = IERC4626(0xf09EDbF2655B2A56753bD60D22CeAB2AC5D04188);
         // Donor of ARB tokens
-        underlyingDonor = 0xF977814e90dA44bFA03b6295A0616a897441aceC;
-        amountToDonate = 1e6 * 1e18;
+        erc4626State.underlyingDonor = 0xF977814e90dA44bFA03b6295A0616a897441aceC;
+        erc4626State.amountToDonate = 1e6 * 1e18;
     }
 }
