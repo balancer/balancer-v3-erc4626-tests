@@ -6,22 +6,21 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626HypurrfiIsolatedUSDHLTest is ERC4626WrapperBaseTest {
-    function setUp() public override {
-        ERC4626WrapperBaseTest.setUp();
+    function _setupFork() internal pure override returns (ForkState memory forkState) {
+        // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
+        forkState.network = "hyperevm";
+        forkState.overrideBlockNumber = 8421898;
     }
 
-    function setUpForkTestVariables() internal override {
-        network = "hyperevm";
-        overrideBlockNumber = 8421898;
-
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Hypurrfi's USDHL
-        wrapper = IERC4626(0xe8648B00570B5562488d8324c98242EE8FB1A35F);
+        erc4626State.wrapper = IERC4626(0xe8648B00570B5562488d8324c98242EE8FB1A35F);
 
         // Donor of USDHL
-        underlyingDonor = 0x2000000000000000000000000000000000000123;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0x2000000000000000000000000000000000000123;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }
