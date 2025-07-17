@@ -20,6 +20,8 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
     // Other tests require only the wrapped token address. Since we're creating the static a token, we need to
     // know the underlying token.
     address private constant USDT0_ADDRESS = 0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb;
+    // Hypurrfi's existing Pooled USDT0
+    address private constant HYUSDT0_ADDRESS = 0x1Ca7e21B2dAa5Ab2eB9de7cf8f34dCf9c8683007;
 
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
@@ -47,7 +49,7 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
         TransparentProxyFactory proxyFactory = new TransparentProxyFactory();
         StaticATokenFactory staticAFactory = new StaticATokenFactory(
             pool,
-            address(123), // Proxy admin, any address will do but address(0)
+            address(1), // Proxy admin, any address will do but address(0)
             proxyFactory,
             address(statATokenImplementation)
         );
@@ -55,6 +57,10 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
         address[] memory underlyings = new address[](1);
         underlyings[0] = underlying;
         address[] memory statATokens = staticAFactory.createStaticATokens(underlyings);
+
+        // The StaticATokenFactory should not create a new aToken, it should only create a staticAToken that points
+        // to the existing aToken.
+        assertEq(address(StaticATokenLM(statATokens[0]).aToken()), HYUSDT0_ADDRESS, "aToken address does not match");
 
         return statATokens[0];
     }
