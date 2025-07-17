@@ -6,17 +6,21 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626EulerMEVwETHTest is ERC4626WrapperBaseTest {
-    function setUp() public override {
-        ERC4626WrapperBaseTest.setUp();
+    function _setupFork() internal pure override returns (ForkState memory forkState) {
+        // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
+        forkState.network = "sonic";
+        forkState.blockNumber = 10486777;
     }
 
-    function setUpForkTestVariables() internal override {
-        network = "sonic";
-        overrideBlockNumber = 10486777;
-
+    function _setUpForkTestVariables()
+        internal
+        pure
+        override
+        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
+    {
         // Euler wETH vault in MEV-Capital cluster
         wrapper = IERC4626(0xa5cd24d9792F4F131f5976Af935A505D19c8Db2b);
         // Donor of wETH
