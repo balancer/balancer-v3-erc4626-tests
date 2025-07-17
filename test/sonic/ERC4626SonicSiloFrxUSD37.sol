@@ -26,6 +26,6 @@ contract ERC4626SonicSiloFrxUSD37Test is ERC4626WrapperBaseTest {
         // the last 3 decimal places. Since the additional 3 digits of precision are always 0 and only used as an
         // additional layer of security against first deposit attacks, it does not impact the functioning of the market.
         // As such, the conversion rate is 1:1000, which we account for here by overwriting underlyingToWrappedFactor
-        underlyingToWrappedFactor = 1000;
+        erc4626State.underlyingToWrappedFactor = 1000;
     }
 }
