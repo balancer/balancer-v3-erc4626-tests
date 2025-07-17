@@ -22,6 +22,7 @@ on:
 jobs:
   test-forge:
     runs-on: ubuntu-latest
+    fail-fast: false
     strategy:
       matrix:
         network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm]
