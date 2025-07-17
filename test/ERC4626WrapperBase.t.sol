@@ -19,15 +19,30 @@ struct ForkState {
     uint256 blockNumber;
 }
 
+/**
+ * @notice Defines wrapper, underlyingDonor, amountToDonate and other test variables.
+ * @param wrapper The address of the ERC4626 token
+ * @param underlyingToken The address of the underlying token
+ * @param underlyingDonor The address that will donate the underlying tokens
+ * @param amountToDonate The amount of underlying tokens to donate
+ * @param minDeposit Some ERC4626 protocols require a minimum amount of underlying tokens to deposit
+ * @param underlyingToWrappedFactor Some ERC4626 protocols use a different amount of decimals between underlying and
+ * the wrapper. This factor scales underlying decimals to wrapper decimals
+ */
 struct ERC4626SetupState {
-    IERC20 underlyingToken;
     IERC4626 wrapper;
+    IERC20 underlyingToken;
     address underlyingDonor;
     uint256 amountToDonate;
     uint256 minDeposit;
     uint256 underlyingToWrappedFactor;
 }
 
+/**
+ * @notice Base test for ERC4626 wrappers.
+ * @dev This test is designed to be used with a fork of the network. To implement these tests, just inherit this
+ * contract and implement the _setupFork and _setUpForkTestVariables functions.
+ */
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
 
@@ -56,23 +71,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.createSelectFork({ blockNumber: forkState.blockNumber, urlOrAlias: forkState.network });
 
-        $ = _setUpForkTestVariables();
-        // $.minDeposit is an optional parameter, used only when the wrapper requires a minimum amount of underlying to
-        // be deposited. If not set by the setup function, the test will assume the value 100.
-        $.minDeposit = $.minDeposit == 0 ? 100 : $.minDeposit;
-
-        vm.label(address($.wrapper), "wrapper");
-
-        $.underlyingToken = IERC20($.wrapper.asset());
-        vm.label(address($.underlyingToken), "underlying");
-
-        if ($.underlyingToken.balanceOf($.underlyingDonor) < 3 * $.amountToDonate) {
-            revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
-        }
-
-        $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
-            ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
-            : $.underlyingToWrappedFactor;
+        _setupERC4626State();
 
         (user, ) = makeAddrAndKey("User");
         vm.label(user, "User");
@@ -95,6 +94,26 @@ abstract contract ERC4626WrapperBaseTest is Test {
         if (shares > 0) {
             revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
         }
+    }
+
+    function _setupERC4626State() private {
+        $ = _setUpForkTestVariables();
+
+        $.underlyingToken = IERC20($.wrapper.asset());
+
+        vm.label(address($.wrapper), "wrapper");
+        vm.label(address($.underlyingToken), "underlying");
+
+        if ($.underlyingToken.balanceOf($.underlyingDonor) < 3 * $.amountToDonate) {
+            revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
+        }
+
+        // If minDeposit and underlyingToWrappedFactor were not set by `_setUpForkTestVariables`, we set default
+        // values.
+        $.minDeposit = $.minDeposit == 0 ? 100 : $.minDeposit;
+        $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
+            ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
+            : $.underlyingToWrappedFactor;
     }
 
     /**
