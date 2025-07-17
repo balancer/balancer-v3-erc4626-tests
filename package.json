@@ -18,7 +18,7 @@
     "Elshan Dzhafarov <elshan@balancerlabs.dev>"
   ],
   "scripts": {
-    "test:forge": "forge test --ffi -vvvvv"
+    "test:forge": "forge test --ffi -vvv"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^5.0.0",
