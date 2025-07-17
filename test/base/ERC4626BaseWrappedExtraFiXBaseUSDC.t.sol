@@ -6,21 +6,20 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626BaseWrappedExtraFiXBaseUSDCTest is ERC4626WrapperBaseTest {
-    function setUp() public override {
-        ERC4626WrapperBaseTest.setUp();
+    function _setupFork() internal pure override returns (ForkState memory forkState) {
+        // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
+        forkState.network = "base";
+        forkState.blockNumber = 30905678;
     }
 
-    function setUpForkTestVariables() internal override {
-        network = "base";
-        overrideBlockNumber = 30905678;
-
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Wrapped ExtraFi X Base USDC
-        wrapper = IERC4626(0x589A7339C6d0c8777E7429F57f2f95c069c37288);
+        erc4626State.wrapper = IERC4626(0x589A7339C6d0c8777E7429F57f2f95c069c37288);
         // Donor of USDC tokens
-        underlyingDonor = 0xee81B5Afc73Cf528778E0ED98622e434E5eFADb4;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0xee81B5Afc73Cf528778E0ED98622e434E5eFADb4;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }
