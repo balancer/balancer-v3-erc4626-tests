@@ -22,6 +22,8 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
     }
 
     function _setUpForkTestVariables() internal override returns (ERC4626SetupState memory erc4626State) {
+        // Pooled tokens are a fork of Aave. So, they don't support EIP-4626 natively. We need, then, to deploy a
+        // staticAToken before testing the token.
         address wrapperAddress = deployStatAToken(address(0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb));
         // Hypurrfi's Pooled USDT0
         erc4626State.wrapper = IERC4626(wrapperAddress);
