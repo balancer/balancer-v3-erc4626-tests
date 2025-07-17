@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2ScETH47Test is ERC4626WrapperBaseTest {
         overrideBlockNumber = 18723271;
 
         // Silo V2's scETH in market 47
-        wrapper = IERC4626(0x24c74B30d1a4261608E84Bf5a618693032681DAc);
+        erc4626State.wrapper = IERC4626(0x24c74B30d1a4261608E84Bf5a618693032681DAc);
         // Donor of scETH
-        underlyingDonor = 0x455d5f11Fea33A8fa9D3e285930b478B6bF85265;
-        amountToDonate = 500 * 1e18;
+        erc4626State.underlyingDonor = 0x455d5f11Fea33A8fa9D3e285930b478B6bF85265;
+        erc4626State.amountToDonate = 500 * 1e18;
     }
 }

@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626AvalancheEulerRe7AUSDTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626AvalancheEulerRe7AUSDTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 59394164;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Euler AUSD
-        wrapper = IERC4626(0x2137568666f12fc5A026f5430Ae7194F1C1362aB);
+        erc4626State.wrapper = IERC4626(0x2137568666f12fc5A026f5430Ae7194F1C1362aB);
         // Donor of AUSD tokens
-        underlyingDonor = 0x190D94613A09ad7931FcD17CD6A8F9B6B47ad414;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0x190D94613A09ad7931FcD17CD6A8F9B6B47ad414;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }

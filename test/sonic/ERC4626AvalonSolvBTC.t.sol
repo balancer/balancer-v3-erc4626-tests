@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626SonicAvalonSolvBTCTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626SonicAvalonSolvBTCTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 4820900;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Avalon solvBTC
-        wrapper = IERC4626(0xD31E89Ffb929b38bA60D1c7dBeB68c7712EAAb0a);
+        erc4626State.wrapper = IERC4626(0xD31E89Ffb929b38bA60D1c7dBeB68c7712EAAb0a);
         // Donor of solvBTC
-        underlyingDonor = 0x5b0a78dE3350EbC3f3260EC90EB7C4CB2Db58B21;
-        amountToDonate = 10 * 1e18;
+        erc4626State.underlyingDonor = 0x5b0a78dE3350EbC3f3260EC90EB7C4CB2Db58B21;
+        erc4626State.amountToDonate = 10 * 1e18;
     }
 }

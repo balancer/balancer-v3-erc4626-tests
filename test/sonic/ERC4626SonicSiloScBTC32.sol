@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2ScBTCTest is ERC4626WrapperBaseTest {
         overrideBlockNumber = 15587732;
 
         // Silo V2's scBTC (id 32)
-        wrapper = IERC4626(0x0A94e18bdbCcD048198806d7FF28A1B1D2590724);
+        erc4626State.wrapper = IERC4626(0x0A94e18bdbCcD048198806d7FF28A1B1D2590724);
         // Donor of scBTC
-        underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-        amountToDonate = 30 * 1e8;
+        erc4626State.underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
+        erc4626State.amountToDonate = 30 * 1e8;
     }
 }

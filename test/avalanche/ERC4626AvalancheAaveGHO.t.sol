@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626AvalancheAaveGHOTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626AvalancheAaveGHOTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 64506494;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's aGHO
-        wrapper = IERC4626(0x79459f4C9AfC902488109D058C3E76ed0B037c41);
+        erc4626State.wrapper = IERC4626(0x79459f4C9AfC902488109D058C3E76ed0B037c41);
         // Donor of GHO tokens
-        underlyingDonor = 0xf611aEb5013fD2c0511c9CD55c7dc5C1140741A6;
-        amountToDonate = 10 * 1e18;
+        erc4626State.underlyingDonor = 0xf611aEb5013fD2c0511c9CD55c7dc5C1140741A6;
+        erc4626State.amountToDonate = 10 * 1e18;
     }
 }

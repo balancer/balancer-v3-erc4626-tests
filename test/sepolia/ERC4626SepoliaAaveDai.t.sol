@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626SepoliaAaveDaiTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -14,16 +14,11 @@ contract ERC4626SepoliaAaveDaiTest is ERC4626WrapperBaseTest {
         forkState.network = "sepolia";
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's static aDAI
-        wrapper = IERC4626(0xDE46e43F46ff74A23a65EBb0580cbe3dFE684a17);
+        erc4626State.wrapper = IERC4626(0xDE46e43F46ff74A23a65EBb0580cbe3dFE684a17);
         // Donor of DAI tokens
-        underlyingDonor = 0x4d02aF17A29cdA77416A1F60Eae9092BB6d9c026;
-        amountToDonate = 1e6 * 1e18;
+        erc4626State.underlyingDonor = 0x4d02aF17A29cdA77416A1F60Eae9092BB6d9c026;
+        erc4626State.amountToDonate = 1e6 * 1e18;
     }
 }

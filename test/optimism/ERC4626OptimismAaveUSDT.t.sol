@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626OptimismAaveUSDTTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626OptimismAaveUSDTTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 133970000;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's aUSDT
-        wrapper = IERC4626(0x927CfF131fD5B43FC992D071929b2c095d6E4b70);
+        erc4626State.wrapper = IERC4626(0x927CfF131fD5B43FC992D071929b2c095d6E4b70);
         // Donor of USDT tokens
-        underlyingDonor = 0xf89d7b9c864f589bbF53a82105107622B35EaA40;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0xf89d7b9c864f589bbF53a82105107622B35EaA40;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }

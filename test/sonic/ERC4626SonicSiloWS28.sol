@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2WS28Test is ERC4626WrapperBaseTest {
         overrideBlockNumber = 7551067;
 
         // Silo V2's ws in market 28
-        wrapper = IERC4626(0x6c49B18333A1135e9A376560c07E6D1Fd0350EaF);
+        erc4626State.wrapper = IERC4626(0x6c49B18333A1135e9A376560c07E6D1Fd0350EaF);
         // Donor of ws
-        underlyingDonor = 0xE223C8e92AA91e966CA31d5C6590fF7167E25801;
-        amountToDonate = 1e6 * 1e18;
+        erc4626State.underlyingDonor = 0xE223C8e92AA91e966CA31d5C6590fF7167E25801;
+        erc4626State.amountToDonate = 1e6 * 1e18;
     }
 }

@@ -87,10 +87,10 @@ contract ERC4626GnosisSDaiTest is Test {
         network = "gnosis";
 
         // sDAI
-        wrapper = IERC4626(0xaf204776c7245bF4147c2612BF6e5972Ee483701);
+        erc4626State.wrapper = IERC4626(0xaf204776c7245bF4147c2612BF6e5972Ee483701);
         // Donor of wxDAI
-        underlyingDonor = 0xaf204776c7245bF4147c2612BF6e5972Ee483701;
-        amountToDonate = 1e4 * 1e18;
+        erc4626State.underlyingDonor = 0xaf204776c7245bF4147c2612BF6e5972Ee483701;
+        erc4626State.amountToDonate = 1e4 * 1e18;
     }
 
     function testPreConditions() public view {

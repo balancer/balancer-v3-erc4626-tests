@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626BaseAaveCbETHTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -15,16 +15,11 @@ contract ERC4626BaseAaveCbETHTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 25630845;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Aave's acbETH
-        wrapper = IERC4626(0x5e8B674127B321DC344c078e58BBACc3f3008962);
+        erc4626State.wrapper = IERC4626(0x5e8B674127B321DC344c078e58BBACc3f3008962);
         // Donor of cbETH tokens
-        underlyingDonor = 0x3bf93770f2d4a794c3d9EBEfBAeBAE2a8f09A5E5;
-        amountToDonate = 1e3 * 1e18;
+        erc4626State.underlyingDonor = 0x3bf93770f2d4a794c3d9EBEfBAeBAE2a8f09A5E5;
+        erc4626State.amountToDonate = 1e3 * 1e18;
     }
 }

@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2SolvBTCBbnTest is ERC4626WrapperBaseTest {
         overrideBlockNumber = 5022201;
 
         // Silo V2's solvBTC
-        wrapper = IERC4626(0x52Fc9E0a68b6a4C9b57b9D1d99fB71449A99DCd8);
+        erc4626State.wrapper = IERC4626(0x52Fc9E0a68b6a4C9b57b9D1d99fB71449A99DCd8);
         // Donor of solvBTC
-        underlyingDonor = 0xe3a97c4Cc6725B96fb133c636D2e88Cc3d6CfdBE;
-        amountToDonate = 30 * 1e15;
+        erc4626State.underlyingDonor = 0xe3a97c4Cc6725B96fb133c636D2e88Cc3d6CfdBE;
+        erc4626State.amountToDonate = 30 * 1e15;
     }
 }

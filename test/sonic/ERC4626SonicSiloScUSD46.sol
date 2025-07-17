@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2ScUSD46Test is ERC4626WrapperBaseTest {
         overrideBlockNumber = 18723271;
 
         // Silo V2's scUSD in market 46
-        wrapper = IERC4626(0xe6605932e4a686534D19005BB9dB0FBA1F101272);
+        erc4626State.wrapper = IERC4626(0xe6605932e4a686534D19005BB9dB0FBA1F101272);
         // Donor of ws
-        underlyingDonor = 0x4D85bA8c3918359c78Ed09581E5bc7578ba932ba;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0x4D85bA8c3918359c78Ed09581E5bc7578ba932ba;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }

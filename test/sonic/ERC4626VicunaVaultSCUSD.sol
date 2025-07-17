@@ -18,9 +18,9 @@ contract ERC4626VicunaVaultSCUSD is ERC4626WrapperBaseTest {
         overrideBlockNumber = 15814743;
 
         // Vicuna scUSD vault
-        wrapper = IERC4626(0x711a93a8bD6803aF0a6122F2dE18c1a6AB7CB29C);
+        erc4626State.wrapper = IERC4626(0x711a93a8bD6803aF0a6122F2dE18c1a6AB7CB29C);
         // Donor of scUSD
-        underlyingDonor = 0xeEb1DC1Ca7ffC5b54aD1cc4c1088Db4E5657Cb6c;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0xeEb1DC1Ca7ffC5b54aD1cc4c1088Db4E5657Cb6c;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }

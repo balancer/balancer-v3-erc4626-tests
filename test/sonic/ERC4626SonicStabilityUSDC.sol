@@ -18,9 +18,9 @@ contract ERC4626SonicStabilityUsdcTest is ERC4626WrapperBaseTest {
         overrideBlockNumber = 33536213;
 
         // Stability USDC
-        wrapper = IERC4626(0xEEEEEEE6d95E55A468D32FeB5d6648754d10A967);
+        erc4626State.wrapper = IERC4626(0xEEEEEEE6d95E55A468D32FeB5d6648754d10A967);
         // Donor of USDC.e
-        underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
-        amountToDonate = 1e7 * 1e6;
+        erc4626State.underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
+        erc4626State.amountToDonate = 1e7 * 1e6;
     }
 }

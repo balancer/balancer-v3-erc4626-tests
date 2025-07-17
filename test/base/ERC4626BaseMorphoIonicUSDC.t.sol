@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import { ERC4626WrapperBaseTest, ForkState } from "../ERC4626WrapperBase.t.sol";
+import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
 contract ERC4626BaseMorphoIonicUSDCTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
@@ -14,16 +14,11 @@ contract ERC4626BaseMorphoIonicUSDCTest is ERC4626WrapperBaseTest {
         forkState.network = "base";
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (IERC4626 wrapper, address underlyingDonor, uint256 amountToDonate, uint256)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Morpho Ionic USDC
-        wrapper = IERC4626(0x23479229e52Ab6aaD312D0B03DF9F33B46753B5e);
+        erc4626State.wrapper = IERC4626(0x23479229e52Ab6aaD312D0B03DF9F33B46753B5e);
         // Donor of USDC tokens
-        underlyingDonor = 0x425fc782110110e2aFD2677e3C91EA77Fd7e0A47;
-        amountToDonate = 1e6 * 1e6;
+        erc4626State.underlyingDonor = 0x425fc782110110e2aFD2677e3C91EA77Fd7e0A47;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }

@@ -25,9 +25,9 @@ contract ERC4626SonicSiloV2WETHTest is ERC4626WrapperBaseTest {
         overrideBlockNumber = 6910517;
 
         // Silo V2's WETH
-        wrapper = IERC4626(0x219656F33c58488D09d518BaDF50AA8CdCAcA2Aa);
+        erc4626State.wrapper = IERC4626(0x219656F33c58488D09d518BaDF50AA8CdCAcA2Aa);
         // Donor of weth
-        underlyingDonor = 0x427514a905fa6bEaed9A36E308Fcfa06cE54e95b;
-        amountToDonate = 50 * 1e18;
+        erc4626State.underlyingDonor = 0x427514a905fa6bEaed9A36E308Fcfa06cE54e95b;
+        erc4626State.amountToDonate = 50 * 1e18;
     }
 }

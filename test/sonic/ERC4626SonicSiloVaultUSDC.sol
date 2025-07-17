@@ -25,9 +25,9 @@ contract ERC4626SonicSiloVaultUSDCTest is ERC4626WrapperBaseTest {
         overrideBlockNumber = 22895600;
 
         // Silo USDC vault
-        wrapper = IERC4626(0xF6F87073cF8929C206A77b0694619DC776F89885);
+        erc4626State.wrapper = IERC4626(0xF6F87073cF8929C206A77b0694619DC776F89885);
         // Donor of usdc
-        underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
-        amountToDonate = 10000 * 1e6;
+        erc4626State.underlyingDonor = 0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6;
+        erc4626State.amountToDonate = 10000 * 1e6;
     }
 }
