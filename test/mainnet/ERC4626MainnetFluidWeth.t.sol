@@ -14,12 +14,7 @@ contract ERC4626MainnetFluidWethTest is ERC4626WrapperBaseTest {
         forkState.network = "mainnet";
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (ERC4626SetupState memory erc4626State minDeposit)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Fluid's WETH
         erc4626State.wrapper = IERC4626(0x90551c1795392094FE6D29B758EcCD233cFAa260);
         // Donor of WETH tokens

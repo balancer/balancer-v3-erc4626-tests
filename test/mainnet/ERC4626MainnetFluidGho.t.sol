@@ -15,12 +15,7 @@ contract ERC4626MainnetFluidGhoTest is ERC4626WrapperBaseTest {
         forkState.blockNumber = 21587513;
     }
 
-    function _setUpForkTestVariables()
-        internal
-        pure
-        override
-        returns (ERC4626SetupState memory erc4626State minDeposit)
-    {
+    function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
         // Fluid's GHO
         erc4626State.wrapper = IERC4626(0x6A29A46E21C730DcA1d8b23d637c101cec605C5B);
         // Donor of GHO tokens
