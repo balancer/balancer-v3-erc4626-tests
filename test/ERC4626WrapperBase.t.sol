@@ -66,7 +66,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         $.underlyingToken = IERC20($.wrapper.asset());
         vm.label(address($.underlyingToken), "underlying");
 
-        if (underlyingToken.balanceOf($.underlyingDonor) < 3 * $.amountToDonate) {
+        if ($.underlyingToken.balanceOf($.underlyingDonor) < 3 * $.amountToDonate) {
             revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
         }
 
@@ -212,14 +212,14 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 convertedShares = $.wrapper.convertToShares(amountToWithdraw);
         uint256 previewedShares = $.wrapper.previewWithdraw(amountToWithdraw);
 
-        uint256 balanceUnderlyingBefore = underlyingToken.balanceOf(user);
-        uint256 balanceSharesBefore = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingBefore = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesBefore = $.wrapper.balanceOf(user);
 
         vm.prank(user);
-        uint256 burnedShares = wrapper.withdraw(amountToWithdraw, user, user);
+        uint256 burnedShares = $.wrapper.withdraw(amountToWithdraw, user, user);
 
-        uint256 balanceUnderlyingAfter = underlyingToken.balanceOf(user);
-        uint256 balanceSharesAfter = wrapper.balanceOf(user);
+        uint256 balanceUnderlyingAfter = $.underlyingToken.balanceOf(user);
+        uint256 balanceSharesAfter = $.wrapper.balanceOf(user);
 
         assertEq(balanceUnderlyingAfter, balanceUnderlyingBefore + amountToWithdraw, "Withdraw is not EXACT_OUT");
         assertEq(balanceSharesAfter, balanceSharesBefore - burnedShares, "Withdraw burned shares do not match");
@@ -289,7 +289,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         underlyingToInitialize = bound(
             underlyingToInitialize,
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            underlyingToken.balanceOf(lp) / 10
+            $.underlyingToken.balanceOf(lp) / 10
         );
         wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
         sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.underlyingToken.balanceOf(lp) / 2);
@@ -330,7 +330,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         underlyingToInitialize = bound(
             underlyingToInitialize,
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            underlyingToken.balanceOf(lp) / 10
+            $.underlyingToken.balanceOf(lp) / 10
         );
         wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
 
@@ -373,7 +373,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         underlyingToInitialize = bound(
             underlyingToInitialize,
             _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            underlyingToken.balanceOf(lp) / initToAddFactor
+            $.underlyingToken.balanceOf(lp) / initToAddFactor
         );
         wrappedToInitialize = bound(
             wrappedToInitialize,
@@ -441,7 +441,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     function _initializeWallet(address receiver) private {
         uint256 initialDeposit = $.amountToDonate / 2;
 
-        vm.prank(underlyingDonor);
+        vm.prank($.underlyingDonor);
         $.underlyingToken.safeTransfer(receiver, $.amountToDonate);
 
         vm.startPrank(receiver);
