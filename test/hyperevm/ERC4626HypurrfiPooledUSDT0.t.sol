@@ -58,10 +58,16 @@ contract ERC4626HypurrfiPooledUSDT0Test is ERC4626WrapperBaseTest {
         underlyings[0] = underlying;
         address[] memory statATokens = staticAFactory.createStaticATokens(underlyings);
 
+        return statATokens[0];
+    }
+
+    function testStaticATokenInitialization() public view {
         // The StaticATokenFactory should not create a new aToken, it should only create a staticAToken that points
         // to the existing aToken.
-        assertEq(address(StaticATokenLM(statATokens[0]).aToken()), HYUSDT0_ADDRESS, "aToken address does not match");
-
-        return statATokens[0];
+        assertEq(
+            address(StaticATokenLM(address($.wrapper)).aToken()),
+            HYUSDT0_ADDRESS,
+            "aToken address does not match"
+        );
     }
 }
