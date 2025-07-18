@@ -1,1 +1,11 @@
 @balancer-v3-monorepo/interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/
+@static-a-token-v3/=lib/static-a-token-v3/src/
+openzeppelin-contracts/=lib/static-a-token-v3/lib/openzeppelin-contracts/
+ds-test/=lib/static-a-token-v3/lib/aave-helpers/lib/forge-std/lib/ds-test/src/
+solidity-utils/=lib/static-a-token-v3/lib/aave-helpers/lib/solidity-utils/src/
+aave-address-book/=lib/static-a-token-v3/lib/aave-helpers/lib/aave-address-book/src/
+aave-helpers/=lib/static-a-token-v3/lib/aave-helpers/src/
+@aave/core-v3/=lib/static-a-token-v3/lib/aave-helpers/lib/aave-address-book/lib/aave-v3-core/
+aave-v3-core/=lib/static-a-token-v3/lib/aave-helpers/lib/aave-address-book/lib/aave-v3-core/
+aave-v3-periphery/=lib/static-a-token-v3/lib/aave-helpers/lib/aave-address-book/lib/aave-v3-periphery/
+@aave/periphery-v3/=lib/static-a-token-v3/lib/aave-helpers/lib/aave-address-book/lib/aave-v3-periphery/
