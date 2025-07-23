@@ -20,7 +20,7 @@ contract ERC4626FelixUSDhl is ERC4626WrapperBaseTest {
         erc4626State.wrapper = IERC4626(0x9c59a9389D8f72DE2CdAf1126F36EA4790E2275e);
 
         // Donor of usdhl
-        erc4626State.underlyingDonor = 0x2000000000000000000000000000000000000123;
-        erc4626State.amountToDonate = 2357062673661;
+        erc4626State.underlyingDonor = 0x68e37dE8d93d3496ae143F2E900490f6280C57cD;
+        erc4626State.amountToDonate = 1e5 * 1e6; // 1 million usdhl
     }
 }
