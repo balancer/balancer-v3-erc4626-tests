@@ -12,6 +12,7 @@ contract ERC4626HyperlendIsolatedUSDT0WhlpTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "hyperevm";
+        // Newer block numbers may fail because the market is close to its cap.
         forkState.blockNumber = 9200000;
     }
 
@@ -21,6 +22,7 @@ contract ERC4626HyperlendIsolatedUSDT0WhlpTest is ERC4626WrapperBaseTest {
 
         // Donor of USDT0
         erc4626State.underlyingDonor = 0x56aBfaf40F5B7464e9cC8cFF1af13863D6914508;
+        // Higher amounts may fail because the market is close to its cap.
         erc4626State.amountToDonate = 1e4 * 1e6;
     }
 }
