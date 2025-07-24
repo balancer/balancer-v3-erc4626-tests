@@ -12,6 +12,7 @@ contract ERC4626HyperlendIsolatedUSDT0WhlpTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "hyperevm";
+        forkState.blockNumber = 9200000;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
@@ -20,6 +21,6 @@ contract ERC4626HyperlendIsolatedUSDT0WhlpTest is ERC4626WrapperBaseTest {
 
         // Donor of USDT0
         erc4626State.underlyingDonor = 0x56aBfaf40F5B7464e9cC8cFF1af13863D6914508;
-        erc4626State.amountToDonate = 1e5 * 1e6;
+        erc4626State.amountToDonate = 1e4 * 1e6;
     }
 }
