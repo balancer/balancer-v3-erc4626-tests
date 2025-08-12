@@ -16,7 +16,7 @@ contract ERC4626FelixUSDhl2 is ERC4626WrapperBaseTest {
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Felix's feUSDhl
+        // Felix's feUSDhl2
         erc4626State.wrapper = IERC4626(0x66c71204B70aE27BE6dC3eb41F9aF5868E68fDb6);
 
         // Donor of usdhl
