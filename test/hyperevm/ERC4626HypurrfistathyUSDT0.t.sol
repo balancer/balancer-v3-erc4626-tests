@@ -12,7 +12,7 @@ contract ERC4626HypurrfistathyUSDT0Test is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "hyperevm";
-        forkState.blockNumber = 11118800;
+        forkState.blockNumber = 11788355;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
