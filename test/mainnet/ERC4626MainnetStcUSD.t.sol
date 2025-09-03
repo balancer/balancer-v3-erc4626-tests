@@ -19,7 +19,7 @@ contract ERC4626MainnetStcUSDTest is ERC4626WrapperBaseTest {
         // Staked cap USD
         erc4626State.wrapper = IERC4626(0x88887bE419578051FF9F4eb6C858A951921D8888);
         // Donor of cUSD
-        erc4626State.underlyingDonor = 0xB40AfddF577Ae584e0494023F37D4F77AFc5773f;
-        erc4626State.amountToDonate = 1e3 * 1e18;
+        erc4626State.underlyingDonor = 0x88887bE419578051FF9F4eb6C858A951921D8888;
+        erc4626State.amountToDonate = 1e6 * 1e18;
     }
 }
