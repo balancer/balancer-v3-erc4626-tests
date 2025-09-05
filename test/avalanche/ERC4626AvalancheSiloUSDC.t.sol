@@ -12,7 +12,7 @@ contract ERC4626AvalancheSiloUSDCTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "avalanche";
-        forkState.blockNumber = 67263131;
+        forkState.blockNumber = 68265091;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
@@ -21,5 +21,9 @@ contract ERC4626AvalancheSiloUSDCTest is ERC4626WrapperBaseTest {
         // Donor of USDC tokens
         erc4626State.underlyingDonor = 0x859592A4A469610E573f96Ef87A0e5565F9a94c8;
         erc4626State.amountToDonate = 1e5 * 1e6;
+
+        // This token does not accept small amounts to withdraw, because there are rounding issues. Still, the value
+        // below is equivalent to 1 USD, which is reasonable.
+        erc4626State.minDeposit = 1000000;
     }
 }
