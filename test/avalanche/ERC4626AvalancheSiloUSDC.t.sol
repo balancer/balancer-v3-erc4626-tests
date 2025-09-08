@@ -24,6 +24,6 @@ contract ERC4626AvalancheSiloUSDCTest is ERC4626WrapperBaseTest {
 
         // This token has 1_000_000 wrapped tokens for each underlying, so any amount of wrapped below 1_000_000 would
         // return 0 assets, which reverts.
-        erc4626State.minRedeem = 1000000;
+        erc4626State.underlyingToWrappedFactor = 1000000;
     }
 }
