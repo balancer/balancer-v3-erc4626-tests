@@ -22,8 +22,8 @@ contract ERC4626AvalancheSiloUSDCTest is ERC4626WrapperBaseTest {
         erc4626State.underlyingDonor = 0x859592A4A469610E573f96Ef87A0e5565F9a94c8;
         erc4626State.amountToDonate = 1e5 * 1e6;
 
-        // This token does not accept small amounts to withdraw, because there are rounding issues. Still, the value
-        // below is equivalent to 1 USD, which is reasonable.
-        erc4626State.minDeposit = 1000000;
+        // This token has 1_000_000 wrapped tokens for each underlying, so any amount of wrapped below 1_000_000 would
+        // return 0 assets, which reverts.
+        erc4626State.minRedeem = 1000000;
     }
 }

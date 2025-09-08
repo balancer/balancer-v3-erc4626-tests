@@ -26,6 +26,7 @@ struct ForkState {
  * @param underlyingDonor The address that will donate the underlying tokens
  * @param amountToDonate The amount of underlying tokens to donate
  * @param minDeposit Some ERC4626 protocols require a minimum amount of underlying tokens to deposit
+ * @param minRedeem Some ERC4626 protocols require a minimum amount of wrapped tokens to redeem
  * @param underlyingToWrappedFactor Some ERC4626 protocols use a different amount of decimals between underlying and
  * the wrapper. This factor scales underlying decimals to wrapper decimals
  */
@@ -35,6 +36,7 @@ struct ERC4626SetupState {
     address underlyingDonor;
     uint256 amountToDonate;
     uint256 minDeposit;
+    uint256 minRedeem;
     uint256 underlyingToWrappedFactor;
 }
 
@@ -108,9 +110,9 @@ abstract contract ERC4626WrapperBaseTest is Test {
             revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
         }
 
-        // If minDeposit and underlyingToWrappedFactor were not set by `_setUpForkTestVariables`, we set default
-        // values.
+        // Set default values for minimum values and underlyingToWrappedFactor, if they were not set by the test.
         $.minDeposit = $.minDeposit == 0 ? 100 : $.minDeposit;
+        $.minRedeem = $.minRedeem == 0 ? 100 : $.minRedeem;
         $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
             ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
             : $.underlyingToWrappedFactor;
@@ -264,7 +266,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // amountToWithdraw does not pass the amount deposited - a wei tolerance.
         amountToRedeem = bound(
             amountToRedeem,
-            $.minDeposit * $.underlyingToWrappedFactor,
+            $.minRedeem * $.underlyingToWrappedFactor,
             userInitialShares - TOLERANCE
         );
 
