@@ -16,9 +16,9 @@ contract ERC4626AvalancheEulerRe7sdeUSDTest is ERC4626WrapperBaseTest {
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Eurler USDC
+        // Euler sdeUSD
         erc4626State.wrapper = IERC4626(0xFECebF56f150A68dDd197c3a6101da35C46693Ac);
-        // Donor of USDC tokens
+        // Donor of sdeUSD tokens
         erc4626State.underlyingDonor = 0xb9CC370a8f19322FC4BF69Da80c6C39FF8F2dB90;
         erc4626State.amountToDonate = 1e5 * 1e18;
     }
