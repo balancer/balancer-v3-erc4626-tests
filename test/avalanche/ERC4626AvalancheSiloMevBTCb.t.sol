@@ -19,9 +19,11 @@ contract ERC4626AvalancheSiloMevBTCbTest is ERC4626WrapperBaseTest {
         // Silo BTC.b
         erc4626State.wrapper = IERC4626(0x1f8E769B5B6010B2C2BBCd68629EA1a0a0Eda7E3);
         // Donor of BTC tokens
-        erc4626State.underlyingDonor = 0x89a415b3D20098E6A6C8f7a59001C67BD3129821;
-        erc4626State.amountToDonate = 1e2 * 1e8;
+        erc4626State.underlyingDonor = 0x8ffDf2DE812095b1D19CB146E4c004587C0A0692;
+        erc4626State.amountToDonate = 500 * 1e8;
 
-        erc4626State.underlyingToWrappedFactor = 1000000;
+        // This token has approximately 1_000_000 wrapped tokens for each underlying, so a redeem of any value below
+        // 1_000_000 would return 0 assets, which reverts.
+        erc4626State.underlyingToWrappedFactor = 1_000_000;
     }
 }
