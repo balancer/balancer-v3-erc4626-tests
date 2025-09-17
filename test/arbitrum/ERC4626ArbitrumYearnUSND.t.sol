@@ -8,18 +8,18 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626SteakhouseInifiniFiUSDC is ERC4626WrapperBaseTest {
+contract ERC4626ArbitrumYearnUSNDTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
-        forkState.network = "mainnet";
-        forkState.blockNumber = 23383203;
+        forkState.network = "arbitrum";
+        forkState.blockNumber = 378061399;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Steakhouse infiniFi USDC
-        erc4626State.wrapper = IERC4626(0xBEeF1f5Bd88285E5B239B6AAcb991d38ccA23Ac9);
-        // Donor of USDC
-        erc4626State.underlyingDonor = 0xEe7aE85f2Fe2239E27D9c1E23fFFe168D63b4055;
-        erc4626State.amountToDonate = 1e6 * 1e6;
+        // Yearn USND
+        erc4626State.wrapper = IERC4626(0x252b965400862d94BDa35FeCF7Ee0f204a53Cc36);
+        // Donor of USND tokens
+        erc4626State.underlyingDonor = 0x6e57181D6b4b7c138a6F956AD16DAF4f27FC5E04;
+        erc4626State.amountToDonate = 1e4 * 1e18;
     }
 }
