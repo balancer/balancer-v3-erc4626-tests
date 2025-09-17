@@ -22,8 +22,8 @@ contract ERC4626ArbitrumVarlamoreUSDCTest is ERC4626WrapperBaseTest {
         erc4626State.underlyingDonor = 0x2Df1c51E09aECF9cacB7bc98cB1742757f163dF7;
         erc4626State.amountToDonate = 1e5 * 1e6;
 
-        // This token has 1_000_000 wrapped tokens for each underlying, so any amount of wrapped below
-        // 1_000_000_000_000_000_000 would return 0 assets, which reverts.
-        erc4626State.underlyingToWrappedFactor = 1000000000000000000;
+        // This token has 1_000_000_000_000_000_000 (1e18) wrapped tokens for each underlying, so a redeem of any
+        // value below 1e18 would return 0 assets, which reverts.
+        erc4626State.underlyingToWrappedFactor = 1e18;
     }
 }
