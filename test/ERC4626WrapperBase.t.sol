@@ -108,8 +108,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
             revert("Underlying donor does not have enough liquidity. Check Readme.md, chapter `Debug failing tests`.");
         }
 
-        // If minDeposit and underlyingToWrappedFactor were not set by `_setUpForkTestVariables`, we set default
-        // values.
+        // Set default values for minimum values and underlyingToWrappedFactor, if they were not set by the test.
         $.minDeposit = $.minDeposit == 0 ? 100 : $.minDeposit;
         $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
             ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
