@@ -22,6 +22,7 @@ contract ERC4626MainnetVarSiloUSDCTest is ERC4626WrapperBaseTest {
         erc4626State.underlyingDonor = 0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341;
         erc4626State.amountToDonate = 1e6 * 1e6;
         
+        // This ERC4626 has approximately 1_000_000 wrapped tokens for each 1 wei of underlying.
         erc4626State.underlyingToWrappedFactor = 1_000_000;
     }
 }
