@@ -528,6 +528,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9805dcfD25e6De36bad8fe9D3Fe2c9b44B764102);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(forkState.network, "plasma")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 1706690;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
         }
