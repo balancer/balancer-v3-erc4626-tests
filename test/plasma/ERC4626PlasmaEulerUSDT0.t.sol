@@ -20,6 +20,7 @@ contract ERC4626PlasmaEulerUSDT0Test is ERC4626WrapperBaseTest {
         erc4626State.wrapper = IERC4626(0xa9C251F8304b1B3Fc2b9e8fcae78D94Eff82Ac66);
         // Donor of USDTO
         erc4626State.underlyingDonor = 0x8741B106e9738a6971AD07DABCFe95FF66337b51;
-        erc4626State.amountToDonate = 1000 * 1e6;
+        // 100M USDT0
+        erc4626State.amountToDonate = 1e8 * 1e6;
     }
 }
