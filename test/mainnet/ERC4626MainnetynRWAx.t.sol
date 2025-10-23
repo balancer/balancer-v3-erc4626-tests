@@ -16,9 +16,9 @@ contract ERC4626MainnetynRWAxTest is ERC4626WrapperBaseTest {
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Staked cap USD
+        // ynRWAx 4626
         erc4626State.wrapper = IERC4626(0x3DB228FE836D99Ccb25Ec4dfdC80ED6d2CDdCB4b);
-        // Donor of cUSD
+        // Donor of USDC
         erc4626State.underlyingDonor = 0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341;
         erc4626State.amountToDonate = 1e6 * 1e6;
     }
