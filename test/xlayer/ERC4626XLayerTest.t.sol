@@ -19,6 +19,6 @@ contract ERC4626XLayerTest is ERC4626WrapperBaseTest {
         erc4626State.wrapper = IERC4626(0x8942C1e1e0D48E14EFBa4cc48d2E3584116e367f);
         // Donor of DAI tokens
         erc4626State.underlyingDonor = 0x7EC81Ef12057008c0BB6B540127f88f917b4fC6c;
-        erc4626State.amountToDonate = 1e5 * 1e18;
+        erc4626State.amountToDonate = 1e5 * 1e6;
     }
 }
