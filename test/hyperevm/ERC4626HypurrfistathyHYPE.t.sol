@@ -16,10 +16,10 @@ contract ERC4626HypurrfistathyHYPETest is ERC4626WrapperBaseTest {
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Hypurrfi's USDT0
+        // Hypurrfi's WHYPE
         erc4626State.wrapper = IERC4626(0x3Df418bE6Dad3f824d00A7c516DAd3Ea2A5a79C6);
 
-        // Donor of USDT0
+        // Donor of WHYPE
         erc4626State.underlyingDonor = 0x39EbBA742B6917D49D4a9Ac7cf5c70f84d34cC9E;
         erc4626State.amountToDonate = 1e4 * 1e18;
     }
