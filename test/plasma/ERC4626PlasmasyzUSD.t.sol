@@ -19,8 +19,8 @@ contract ERC4626PlasmasyzUSDTest is ERC4626WrapperBaseTest {
         // syzUSD
         erc4626State.wrapper = IERC4626(0xC8A8DF9B210243c55D31c73090F06787aD0A1Bf6);
         // Donor of ysUSD
-        erc4626State.underlyingDonor = 0xC8A8DF9B210243c55D31c73090F06787aD0A1Bf6;
+        erc4626State.underlyingDonor = 0x5edCBC20Cac67AdC2e724d4348Ff85132B085b82;
         
-        erc4626State.amountToDonate = 1e6 * 1e18;
+        erc4626State.amountToDonate = 1e5 * 1e18;
     }
 }
