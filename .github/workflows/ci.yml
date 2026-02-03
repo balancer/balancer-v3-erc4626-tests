@@ -12,6 +12,7 @@ env:
   OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
   HYPEREVM_RPC_URL: ${{ secrets.HYPEREVM_RPC_URL }}
   PLASMA_RPC_URL: ${{ secrets.PLASMA_RPC_URL }}
+  XLAYER_RPC_URL: ${{ secrets.XLAYER_RPC_URL }}
 
 on:
   push:
@@ -26,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm, plasma]
+        network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm, plasma, xlayer]
     steps:
       - uses: actions/checkout@v4
       - name: Set up environment

@@ -9,7 +9,7 @@
     "url": "https://github.com/balancer-labs/balancer-v3-erc4626-tests/issues"
   },
   "engines": {
-    "node": ">=18 <18.21"
+    "node": ">=18 <22"
   },
   "contributors": [
     "Juan Ignacio Ubeira <juani@balancerlabs.dev>",
