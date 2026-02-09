@@ -11,9 +11,9 @@ fs_permissions = [
     { access = "read-write", path = "./.forge-snapshots/"},
 ]
 remappings = [
-    'forge-std/=lib/forge-std/src/',
-    '@openzeppelin/=lib/openzeppelin-contracts/',
-    'permit2/=lib/permit2/'
+    'forge-std/=node_modules/forge-std/src/',
+    '@openzeppelin/=node_modules/@openzeppelin/',
+    'permit2/=node_modules/permit2/'
 ]
 optimizer = true
 optimizer_runs = 999

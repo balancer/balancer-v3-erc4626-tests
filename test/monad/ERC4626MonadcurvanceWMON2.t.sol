@@ -12,7 +12,7 @@ contract ERC4626MonadcurvanceWMON2Test is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "monad";
-        forkState.blockNumber = 51741623;
+        forkState.blockNumber = 53574916;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
@@ -21,6 +21,6 @@ contract ERC4626MonadcurvanceWMON2Test is ERC4626WrapperBaseTest {
         // Donor of AUSD
         erc4626State.underlyingDonor = 0x1d6f4d93ac7aa8574865666ab863De72129c1781;
         
-        erc4626State.amountToDonate = 1e4 * 1e6;
+        erc4626State.amountToDonate = 100*1e18;
     }
 }

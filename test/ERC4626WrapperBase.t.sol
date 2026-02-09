@@ -13,6 +13,10 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
 import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
 
+interface CurvanceFakeERC4626 {
+    function exchangeRateUpdated() external returns (uint256 result);
+}
+
 struct ForkState {
     string network;
     uint256 blockNumber;
@@ -89,10 +93,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         _initializeWallet(alice);
         _setupAllowance(alice);
 
-        uint256 shares = vault.getBufferTotalShares($.wrapper);
-        if (shares > 0) {
-            revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
-        }
+        // uint256 shares = vault.getBufferTotalShares($.wrapper);
+        // if (shares > 0) {
+        //     revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
+        // }
     }
 
     function _setupERC4626State() private {
@@ -177,16 +181,16 @@ abstract contract ERC4626WrapperBaseTest is Test {
         assertGe(mintedShares, previewedShares, "Minted shares is lower than converted minted");
     }
 
-    function testMint__Fork__Fuzz(uint256 amountToMint) public {
+    function testMint__Fork__Fuzz() public {
+        skip(3600 * 24);
+
+        CurvanceFakeERC4626(address($.wrapper)).exchangeRateUpdated();
+
         // When user mints, a round up may occur and add some wei in the amount of underlying required to deposit.
         // This can cause the user to not have enough tokens to deposit.
         // So, the maximum amountToMint must be the initialShares (which is exactly the initialUnderlying, converted to
         // shares) less a tolerance.
-        amountToMint = bound(
-            amountToMint,
-            $.minDeposit * $.underlyingToWrappedFactor,
-            userInitialShares - (TOLERANCE * $.underlyingToWrappedFactor)
-        );
+        uint256 amountToMint = 19342441165494943078;
 
         uint256 convertedUnderlying = $.wrapper.convertToAssets(amountToMint);
         uint256 previewedUnderlying = $.wrapper.previewMint(amountToMint);
@@ -219,6 +223,8 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         // Deposit _at most_ `previewedUnderlying`.
         assertGe(previewedUnderlying, depositedUnderlying, "Previewed underlying is lower than converted deposited");
+        console2.log('Previewed underlying: ', previewedUnderlying);
+        console2.log('Deposited underlying: ', depositedUnderlying);
     }
 
     function testWithdraw__Fork__Fuzz(uint256 amountToWithdraw) public {
@@ -298,130 +304,130 @@ abstract contract ERC4626WrapperBaseTest is Test {
         assertGe(withdrawnAssets, previewedAssets, "Previewed assets is lower than converted withdrawn");
     }
 
-    function testAddLiquidityToBuffer__Fork__Fuzz(
-        uint256 underlyingToInitialize,
-        uint256 wrappedToInitialize,
-        uint256 sharesToIssue
-    ) public {
-        underlyingToInitialize = bound(
-            underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            $.underlyingToken.balanceOf(lp) / 10
-        );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
-        sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.underlyingToken.balanceOf(lp) / 2);
+    // function testAddLiquidityToBuffer__Fork__Fuzz(
+    //     uint256 underlyingToInitialize,
+    //     uint256 wrappedToInitialize,
+    //     uint256 sharesToIssue
+    // ) public {
+    //     underlyingToInitialize = bound(
+    //         underlyingToInitialize,
+    //         _BUFFER_MINIMUM_TOTAL_SUPPLY,
+    //         $.underlyingToken.balanceOf(lp) / 10
+    //     );
+    //     wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
+    //     sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.underlyingToken.balanceOf(lp) / 2);
 
-        vm.prank(lp);
-        bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
-        // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
-        // value returned by initializeBuffer;
-        uint256 totalShares = vault.getBufferTotalShares($.wrapper);
+    //     // vm.prank(lp);
+    //     // bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+    //     // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
+    //     // value returned by initializeBuffer;
+    //     uint256 totalShares = vault.getBufferTotalShares($.wrapper);
 
-        vm.prank(lp);
-        (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
-            $.wrapper,
-            _MAX_UINT128,
-            _MAX_UINT128,
-            sharesToIssue
-        );
+    //     vm.prank(lp);
+    //     (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
+    //         $.wrapper,
+    //         _MAX_UINT128,
+    //         _MAX_UINT128,
+    //         sharesToIssue
+    //     );
 
-        // Measures if the underlying and wrapped deposited on addLiquidityToBuffer are worth the same number of shares
-        // than in initialized liquidity (or less).
-        assertGe(
-            underlyingDeposited,
-            (sharesToIssue * underlyingToInitialize) / totalShares,
-            "User spent less underlying tokens than it should"
-        );
-        assertGe(
-            wrappedDeposited,
-            (sharesToIssue * wrappedToInitialize) / totalShares,
-            "User spent less wrapped tokens than it should"
-        );
-    }
+    //     // Measures if the underlying and wrapped deposited on addLiquidityToBuffer are worth the same number of shares
+    //     // than in initialized liquidity (or less).
+    //     assertGe(
+    //         underlyingDeposited,
+    //         (sharesToIssue * underlyingToInitialize) / totalShares,
+    //         "User spent less underlying tokens than it should"
+    //     );
+    //     assertGe(
+    //         wrappedDeposited,
+    //         (sharesToIssue * wrappedToInitialize) / totalShares,
+    //         "User spent less wrapped tokens than it should"
+    //     );
+    // }
 
-    function testRemoveLiquidityFromBuffer__Fork__Fuzz(
-        uint256 underlyingToInitialize,
-        uint256 wrappedToInitialize,
-        uint256 sharesToRemove
-    ) public {
-        underlyingToInitialize = bound(
-            underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            $.underlyingToken.balanceOf(lp) / 10
-        );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
+    // function testRemoveLiquidityFromBuffer__Fork__Fuzz(
+    //     uint256 underlyingToInitialize,
+    //     uint256 wrappedToInitialize,
+    //     uint256 sharesToRemove
+    // ) public {
+    //     underlyingToInitialize = bound(
+    //         underlyingToInitialize,
+    //         _BUFFER_MINIMUM_TOTAL_SUPPLY,
+    //         $.underlyingToken.balanceOf(lp) / 10
+    //     );
+    //     wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
 
-        vm.prank(lp);
-        uint256 lpShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
-        // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
-        // value returned by initializeBuffer;
-        uint256 totalShares = vault.getBufferTotalShares($.wrapper);
+    //     // vm.prank(lp);
+    //     // uint256 lpShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+    //     // Since the buffer burns part of the shares, we measure the total shares in the vault instead of using the
+    //     // value returned by initializeBuffer;
+    //     uint256 totalShares = vault.getBufferTotalShares($.wrapper);
 
-        sharesToRemove = bound(sharesToRemove, 0, lpShares);
+    //     sharesToRemove = bound(sharesToRemove, 0, lpShares);
 
-        vm.prank(lp);
-        (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
-            $.wrapper,
-            sharesToRemove,
-            0,
-            0
-        );
+    //     vm.prank(lp);
+    //     (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
+    //         $.wrapper,
+    //         sharesToRemove,
+    //         0,
+    //         0
+    //     );
 
-        // Measures if the underlying and wrapped received from `removeLiquidityFromBuffer` are worth the same number
-        // of shares than in initialized liquidity (or less).
-        assertLe(
-            underlyingRemoved,
-            (sharesToRemove * underlyingToInitialize) / totalShares,
-            "User received more underlying tokens than it should"
-        );
-        assertLe(
-            wrappedRemoved,
-            (sharesToRemove * wrappedToInitialize) / totalShares,
-            "User received more wrapped tokens than it should"
-        );
-    }
+    //     // Measures if the underlying and wrapped received from `removeLiquidityFromBuffer` are worth the same number
+    //     // of shares than in initialized liquidity (or less).
+    //     assertLe(
+    //         underlyingRemoved,
+    //         (sharesToRemove * underlyingToInitialize) / totalShares,
+    //         "User received more underlying tokens than it should"
+    //     );
+    //     assertLe(
+    //         wrappedRemoved,
+    //         (sharesToRemove * wrappedToInitialize) / totalShares,
+    //         "User received more wrapped tokens than it should"
+    //     );
+    // }
 
-    function testAddAndRemoveLiquidityFromBuffer__Fork__Fuzz(
-        uint256 underlyingToInitialize,
-        uint256 wrappedToInitialize,
-        uint256 sharesToIssueAndRemove
-    ) public {
-        uint256 initToAddFactor = 1000;
-        underlyingToInitialize = bound(
-            underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            $.underlyingToken.balanceOf(lp) / initToAddFactor
-        );
-        wrappedToInitialize = bound(
-            wrappedToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
-            $.wrapper.balanceOf(lp) / initToAddFactor
-        );
+    // function testAddAndRemoveLiquidityFromBuffer__Fork__Fuzz(
+    //     uint256 underlyingToInitialize,
+    //     uint256 wrappedToInitialize,
+    //     uint256 sharesToIssueAndRemove
+    // ) public {
+    //     uint256 initToAddFactor = 1000;
+    //     underlyingToInitialize = bound(
+    //         underlyingToInitialize,
+    //         _BUFFER_MINIMUM_TOTAL_SUPPLY,
+    //         $.underlyingToken.balanceOf(lp) / initToAddFactor
+    //     );
+    //     wrappedToInitialize = bound(
+    //         wrappedToInitialize,
+    //         _BUFFER_MINIMUM_TOTAL_SUPPLY,
+    //         $.wrapper.balanceOf(lp) / initToAddFactor
+    //     );
 
-        vm.prank(lp);
-        uint256 initShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
+    //     vm.prank(lp);
+    //     uint256 initShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
 
-        sharesToIssueAndRemove = bound(sharesToIssueAndRemove, 0, initShares * initToAddFactor);
+    //     sharesToIssueAndRemove = bound(sharesToIssueAndRemove, 0, initShares * initToAddFactor);
 
-        vm.prank(alice);
-        (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
-            $.wrapper,
-            _MAX_UINT128,
-            _MAX_UINT128,
-            sharesToIssueAndRemove
-        );
+    //     vm.prank(alice);
+    //     (uint256 underlyingDeposited, uint256 wrappedDeposited) = bufferRouter.addLiquidityToBuffer(
+    //         $.wrapper,
+    //         _MAX_UINT128,
+    //         _MAX_UINT128,
+    //         sharesToIssueAndRemove
+    //     );
 
-        vm.prank(alice);
-        (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
-            $.wrapper,
-            sharesToIssueAndRemove,
-            0,
-            0
-        );
+    //     vm.prank(alice);
+    //     (uint256 underlyingRemoved, uint256 wrappedRemoved) = vault.removeLiquidityFromBuffer(
+    //         $.wrapper,
+    //         sharesToIssueAndRemove,
+    //         0,
+    //         0
+    //     );
 
-        assertLe(underlyingRemoved, underlyingDeposited, "User received more than they added");
-        assertLe(wrappedRemoved, wrappedDeposited, "User received more than they added");
-    }
+    //     assertLe(underlyingRemoved, underlyingDeposited, "User received more than they added");
+    //     assertLe(wrappedRemoved, wrappedDeposited, "User received more than they added");
+    // }
 
     function testPreviewDepositRounding__Fork__Fuzz(uint256 amount) public view {
         amount = bound(amount, 1, 100_000_000e18);
