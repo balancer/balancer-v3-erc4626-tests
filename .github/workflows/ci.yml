@@ -67,7 +67,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: '~/.foundry/cache/rpc/**'
-          key: forge-network-fork-${{ github.run_number }}-${{ github.run_attempt }}
+          key: forge-network-fork-${{ github.run_number }}-${{ github.run_attempt }}-${{ matrix.network }}
           restore-keys: |
             forge-network-fork-
       - name: Test
