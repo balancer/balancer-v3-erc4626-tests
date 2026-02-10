@@ -22,16 +22,54 @@ on:
     branches: ['*', '**/*']
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up environment
+        uses: ./.github/actions/setup
+      - name: Build
+        run: yarn build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORGE_SNAPSHOT_CHECK: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-contracts
+          path: test/
+
   test-forge:
     runs-on: ubuntu-latest
+    needs: build
     strategy:
       fail-fast: false
       matrix:
         network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm, plasma, xlayer]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-contracts
+          path: test/
       - name: Set up environment
         uses: ./.github/actions/setup
+      - name: Restore Forked Network Cache
+        # Forge caches node requests when working with forked networks (e.g. when querying contract code, storage,
+        # etc.) to save time in future runs. We cache this directory across runs.
+        # This cache action is special for a couple reasons, which originate from a) it not occupying much disk size,
+        # and b) the cache never being invalid (as past blockchain data is immutable). We therefore:
+        #  - save the cache even on action failure (which may be caused due to a timeout), even if this could result in
+        #    some wasted space. For this we use the always-upload-cache fork of the basic action.
+        #  - use a different key on every single run, causing for the cache to always be saved.
+        #  - use a wildcard as a restore key, which will cause all stored keys to match and the most recent one to be
+        #    selected.
+        id: cache-forked-network-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: '~/.foundry/cache/rpc/**'
+          key: forge-network-fork-${{ github.run_number }}-${{ github.run_attempt }}
+          restore-keys: |
+            forge-network-fork-
       - name: Test
         run: yarn test:forge --match-path "test/${{ matrix.network }}/*"
       - name: Save Forked Network Cache
