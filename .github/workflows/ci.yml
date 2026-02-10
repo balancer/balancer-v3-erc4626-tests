@@ -36,9 +36,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: built-contracts
-          path: |
-            test/
-            lib/
+          path: test/
 
   test-forge:
     runs-on: ubuntu-latest
@@ -52,9 +50,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: built-contracts
-          path: |
-            test/
-            lib/
+          path: test/
       - name: Set up environment
         uses: ./.github/actions/setup
       - name: Restore Forked Network Cache
