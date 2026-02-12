@@ -72,29 +72,7 @@ jobs:
           restore-keys: |
             forge-network-fork-${{ matrix.network }}-
       - name: Test
-        run: |
-          set -euo pipefail
-
-          case "${{ matrix.network }}" in
-            arbitrum)  FORK_URL="$ARBITRUM_RPC_URL" ;;
-            avalanche) FORK_URL="$AVALANCHE_RPC_URL" ;;
-            base)      FORK_URL="$BASE_RPC_URL" ;;
-            gnosis)    FORK_URL="$GNOSIS_RPC_URL" ;;
-            mainnet)   FORK_URL="$MAINNET_RPC_URL" ;;
-            optimism)  FORK_URL="$OPTIMISM_RPC_URL" ;;
-            sepolia)   FORK_URL="$SEPOLIA_RPC_URL" ;;
-            sonic)     FORK_URL="$SONIC_RPC_URL" ;;
-            hyperevm)  FORK_URL="$HYPEREVM_RPC_URL" ;;
-            plasma)    FORK_URL="$PLASMA_RPC_URL" ;;
-            xlayer)    FORK_URL="$XLAYER_RPC_URL" ;;
-            *) echo "Unknown network: ${{ matrix.network }}"; exit 1 ;;
-          esac
-
-          yarn test:forge -- \
-            --fork-url "$FORK_URL" \
-            --fork-retries 5 \
-            --fork-retry-backoff 2 \
-            --match-path "test/${{ matrix.network }}/*"
+        run: yarn test:forge --rpc-url "${{ matrix.network }}" --fork-retries 5 --fork-retry-backoff 2 --match-path "test/${{ matrix.network }}/*"
       - name: Save Forked Network Cache
         # Always save; the key changes on every run, and the current one should be the most complete one.
         id: cache-forked-network-save
