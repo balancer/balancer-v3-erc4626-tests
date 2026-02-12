@@ -93,6 +93,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         if (shares > 0) {
             revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
         }
+
+        // Some tokens might have weird interest accrual mechanisms that get reset on transfers.
+        // Waiting some time might reveal inconsistencies in these tokens.
+        skip(1 days);
     }
 
     function _setupERC4626State() private {
