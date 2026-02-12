@@ -1,4 +1,5 @@
 @balancer-v3-monorepo/interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/
+@balancer-v3-monorepo/solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/contracts/
 @static-a-token-v3/=lib/static-a-token-v3/src/
 openzeppelin-contracts/=lib/static-a-token-v3/lib/openzeppelin-contracts/
 ds-test/=lib/static-a-token-v3/lib/aave-helpers/lib/forge-std/lib/ds-test/src/
