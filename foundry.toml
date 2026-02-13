@@ -11,9 +11,9 @@ fs_permissions = [
     { access = "read-write", path = "./.forge-snapshots/"},
 ]
 remappings = [
-    'forge-std/=node_modules/forge-std/src/',
-    '@openzeppelin/=node_modules/@openzeppelin/',
-    'permit2/=node_modules/permit2/'
+    'forge-std/=lib/forge-std/src/',
+    '@openzeppelin/=lib/openzeppelin-contracts/',
+    'permit2/=lib/permit2/'
 ]
 optimizer = true
 optimizer_runs = 999
@@ -37,4 +37,5 @@ max_test_rejects = 60000
   avalanche = "${AVALANCHE_RPC_URL}"
   hyperevm = "${HYPEREVM_RPC_URL}"
   plasma = "${PLASMA_RPC_URL}"
+  monad = "${MONAD_RPC_URL}"
   xlayer = "${XLAYER_RPC_URL}"
