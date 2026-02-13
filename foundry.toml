@@ -38,3 +38,4 @@ max_test_rejects = 60000
   hyperevm = "${HYPEREVM_RPC_URL}"
   plasma = "${PLASMA_RPC_URL}"
   monad = "${MONAD_RPC_URL}"
+  xlayer = "${XLAYER_RPC_URL}"
