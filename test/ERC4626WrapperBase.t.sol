@@ -12,6 +12,7 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
 import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
 import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
+import { FixedPoint } from "@balancer-v3-monorepo/solidity-utils/math/FixedPoint.sol";
 
 struct ForkState {
     string network;
@@ -44,6 +45,7 @@ struct ERC4626SetupState {
  */
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
+    using FixedPoint for uint256;
 
     uint128 internal constant _MAX_UINT128 = type(uint128).max;
     uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
@@ -93,6 +95,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         if (shares > 0) {
             revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
         }
+
+        // Some tokens might have weird interest accrual mechanisms that get reset on transfers.
+        // Waiting some time might reveal inconsistencies in these tokens.
+        skip(1 days);
     }
 
     function _setupERC4626State() private {
@@ -182,10 +188,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // This can cause the user to not have enough tokens to deposit.
         // So, the maximum amountToMint must be the initialShares (which is exactly the initialUnderlying, converted to
         // shares) less a tolerance.
+        // We also leave some room (use up to 95%) to account for interest accrued after setup finishes.
         amountToMint = bound(
             amountToMint,
             $.minDeposit * $.underlyingToWrappedFactor,
-            userInitialShares - (TOLERANCE * $.underlyingToWrappedFactor)
+            userInitialShares.mulDown(95e16) - (TOLERANCE * $.underlyingToWrappedFactor)
         );
 
         uint256 convertedUnderlying = $.wrapper.convertToAssets(amountToMint);
