@@ -43,6 +43,7 @@ jobs:
     needs: build
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm, plasma, xlayer]
     steps:
@@ -67,11 +68,18 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: '~/.foundry/cache/rpc/**'
-          key: forge-network-fork-${{ github.run_number }}-${{ github.run_attempt }}-${{ matrix.network }}
+          key: forge-network-fork-${{ matrix.network }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
-            forge-network-fork-
+            forge-network-fork-${{ matrix.network }}-
       - name: Test
-        run: yarn test:forge --match-path "test/${{ matrix.network }}/*"
+        run: >
+          yarn test:forge
+          --rpc-url "${{ matrix.network }}"
+          --fork-retries 10
+          --fork-retry-backoff 5
+          --threads 1
+          --compute-units-per-second 50
+          --match-path "test/${{ matrix.network }}/*"
       - name: Save Forked Network Cache
         # Always save; the key changes on every run, and the current one should be the most complete one.
         id: cache-forked-network-save
