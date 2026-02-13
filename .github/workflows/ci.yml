@@ -43,7 +43,7 @@ jobs:
     needs: build
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         network: [arbitrum, avalanche, base, gnosis, mainnet, optimism, sepolia, sonic, hyperevm, plasma, xlayer]
     steps:
