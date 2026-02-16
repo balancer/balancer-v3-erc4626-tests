@@ -19,7 +19,7 @@ contract ERC4626MainnetsINVTest is ERC4626WrapperBaseTest {
         // sINV
         erc4626State.wrapper = IERC4626(0x08d23468A467d2bb86FaE0e32F247A26C7E2e994);
         // Donor of INV
-        erc4626State.underlyingDonor = 0x1637e4e9941D55703a7A5E7807d6aDA3f7DCD61B;
+        erc4626State.underlyingDonor = 0x82EE747102B4764C88835aBc9Bc8d79D9498A227;
         erc4626State.amountToDonate = 1e4 * 1e18;
     }
 }
