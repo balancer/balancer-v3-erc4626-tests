@@ -12,7 +12,7 @@ contract ERC4626GnosisAaveEureTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "gnosis";
-        forkState.blockNumber = 37380224;
+        forkState.blockNumber = 39035618;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
