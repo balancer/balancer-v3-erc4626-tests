@@ -93,9 +93,9 @@ In terms of all ERC4626 vaults, there is an [inherent incompatibility](https://d
    export MAINNET_RPC_URL=https://your-mainnet-rpc-url
    ```
 
-2. Run the test with `forge test`, using `--match-contract` to target a specific test contract:
+2. Run the test with `yarn test:forge`. Use `--match-contract` or `--mc` if you need to target a specific test contract, locally. Also, use `-vvv` for debugging, if needed:
    ```bash
-   forge test --match-contract ERC4626MainnetMorphoKpkUsdcYield --fork-url $MAINNET_RPC_URL -vvv
+   yarn test:forge --mc ERC4626MainnetMorphoKpkUsdcYield
    ```
    Replace `ERC4626MainnetMorphoKpkUsdcYield` with the name of the test contract you want to run (i.e., the
    `contract` name defined in the `.t.sol` file). Replace `$MAINNET_RPC_URL` with the appropriate RPC URL variable
