@@ -98,8 +98,7 @@ In terms of all ERC4626 vaults, there is an [inherent incompatibility](https://d
    yarn test:forge --mc ERC4626MainnetMorphoKpkUsdcYield
    ```
    Replace `ERC4626MainnetMorphoKpkUsdcYield` with the name of the test contract you want to run (i.e., the
-   `contract` name defined in the `.t.sol` file). Replace `$MAINNET_RPC_URL` with the appropriate RPC URL variable
-   for the chain the test targets (e.g., `$ARBITRUM_RPC_URL` for Arbitrum tests, `$BASE_RPC_URL` for Base tests, etc.).
+   `contract` name defined in the `.t.sol` file).
 
 #### Adding a New Test
 
