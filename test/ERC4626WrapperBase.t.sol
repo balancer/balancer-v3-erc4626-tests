@@ -8,11 +8,11 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
 import { IBufferRouter } from "@balancer-v3-monorepo/interfaces/vault/IBufferRouter.sol";
 import { IVault } from "@balancer-v3-monorepo/interfaces/vault/IVault.sol";
+import { FixedPoint } from "@balancer-v3-monorepo/solidity-utils/math/FixedPoint.sol";
 
 struct ForkState {
     string network;
@@ -45,6 +45,7 @@ struct ERC4626SetupState {
  */
 abstract contract ERC4626WrapperBaseTest is Test {
     using SafeERC20 for IERC20;
+    using FixedPoint for uint256;
 
     uint128 internal constant _MAX_UINT128 = type(uint128).max;
     uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
@@ -94,6 +95,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         if (shares > 0) {
             revert("Vault's buffer is already initialized. Check Readme.md, chapter `Debug failing tests`.");
         }
+
+        // Some tokens might have weird interest accrual mechanisms that get reset on transfers.
+        // Waiting some time might reveal inconsistencies in these tokens.
+        skip(1 days);
     }
 
     function _setupERC4626State() private {
@@ -183,10 +188,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
         // This can cause the user to not have enough tokens to deposit.
         // So, the maximum amountToMint must be the initialShares (which is exactly the initialUnderlying, converted to
         // shares) less a tolerance.
+        // We also leave some room (use up to 95%) to account for interest accrued after setup finishes.
         amountToMint = bound(
             amountToMint,
             $.minDeposit * $.underlyingToWrappedFactor,
-            userInitialShares - (TOLERANCE * $.underlyingToWrappedFactor)
+            userInitialShares.mulDown(95e16) - (TOLERANCE * $.underlyingToWrappedFactor)
         );
 
         uint256 convertedUnderlying = $.wrapper.convertToAssets(amountToMint);
@@ -527,6 +533,16 @@ abstract contract ERC4626WrapperBaseTest is Test {
             forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 8062650;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x9805dcfD25e6De36bad8fe9D3Fe2c9b44B764102);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(forkState.network, "plasma")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 1706690;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(forkState.network, "xlayer")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 44013764;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x85a80afee867aDf27B50BdB7b76DA70f1E853062);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else {
             revert("Network not registered in ERC4626WrapperBase.sol");
