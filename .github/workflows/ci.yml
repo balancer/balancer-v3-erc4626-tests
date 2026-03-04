@@ -71,15 +71,62 @@ jobs:
           key: forge-network-fork-${{ matrix.network }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
             forge-network-fork-${{ matrix.network }}-
+      - name: Build Blacklist Filter
+        id: blacklist-filter
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          network="${{ matrix.network }}"
+          blacklist_file="test/blacklist.json"
+
+          if [[ ! -f "${blacklist_file}" ]]; then
+            echo "no_match_path=" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          no_match_path="$(node -e '
+            const fs = require("node:fs");
+
+            const network = process.argv[1];
+            const filePath = process.argv[2];
+            const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+            const raw = fs.readFileSync(filePath, "utf8");
+            const parsed = JSON.parse(raw);
+            const networkEntries = Array.isArray(parsed?.[network]) ? parsed[network] : [];
+
+            const blacklistedPaths = networkEntries
+              .map((entry) => typeof entry === "string" ? entry : entry?.path)
+              .filter((path) => typeof path === "string" && path.length > 0);
+
+            process.stdout.write(blacklistedPaths.map(escapeRegex).join("|"));
+          ' "${network}" "${blacklist_file}")"
+
+          echo "no_match_path=${no_match_path}" >> "${GITHUB_OUTPUT}"
+          if [[ -n "${no_match_path}" ]]; then
+            echo "Applying blacklist filter for ${network}: ${no_match_path}"
+          fi
       - name: Test
-        run: >
-          yarn test:forge
-          --rpc-url "${{ matrix.network }}"
-          --fork-retries 10
-          --fork-retry-backoff 5
-          --threads 1
-          --compute-units-per-second 50
-          --match-path "test/${{ matrix.network }}/*"
+        shell: bash
+        env:
+          NO_MATCH_PATH: ${{ steps.blacklist-filter.outputs.no_match_path }}
+        run: |
+          set -euo pipefail
+
+          extra_args=()
+          if [[ -n "${NO_MATCH_PATH}" ]]; then
+            extra_args+=(--no-match-path "${NO_MATCH_PATH}")
+          fi
+
+          yarn test:forge \
+            --rpc-url "${{ matrix.network }}" \
+            --fork-retries 10 \
+            --fork-retry-backoff 5 \
+            --threads 1 \
+            --compute-units-per-second 50 \
+            --match-path "test/${{ matrix.network }}/*" \
+            "${extra_args[@]}"
       - name: Save Forked Network Cache
         # Always save; the key changes on every run, and the current one should be the most complete one.
         id: cache-forked-network-save
