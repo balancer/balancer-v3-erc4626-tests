@@ -470,12 +470,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.startPrank(receiver);
         $.underlyingToken.forceApprove(address($.wrapper), initialDeposit);
-        try $.wrapper.deposit(initialDeposit, receiver) {} catch {
-            revert(
-                "Wrapper deposit failed during wallet initialization. "
-                "This wrapper may use a 2-step deposit mechanism that is incompatible with these tests and the buffer infrastructure."
-            );
-        }
+        $.wrapper.deposit(initialDeposit, receiver);
         vm.stopPrank();
     }
 
