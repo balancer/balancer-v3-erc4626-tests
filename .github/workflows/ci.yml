@@ -80,6 +80,7 @@ jobs:
           --threads 1
           --compute-units-per-second 50
           --match-path "test/${{ matrix.network }}/*"
+          --no-match-path "test/blacklisted/*"
       - name: Save Forked Network Cache
         # Always save; the key changes on every run, and the current one should be the most complete one.
         id: cache-forked-network-save
