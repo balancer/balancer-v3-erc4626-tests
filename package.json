@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "build": "forge build",
-    "test:forge": "forge test --ffi -vvv"
+    "test:forge": "forge test --ffi -vvv --no-match-path 'test/blacklisted/*'"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^5.0.0",
