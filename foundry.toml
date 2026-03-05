@@ -37,3 +37,4 @@ max_test_rejects = 60000
   avalanche = "${AVALANCHE_RPC_URL}"
   hyperevm = "${HYPEREVM_RPC_URL}"
   plasma = "${PLASMA_RPC_URL}"
+  xlayer = "${XLAYER_RPC_URL}"
