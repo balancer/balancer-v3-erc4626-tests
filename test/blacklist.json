@@ -1,0 +1,8 @@
+{
+  "mainnet": [
+    {
+      "address": "0x936faCdf10c8c36294e7b9d28345255539d81bc7",
+      "path": "test/mainnet/ERC4626MainnetRockReth.t.sol"
+    }
+  ]
+}
