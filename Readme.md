@@ -65,3 +65,49 @@ The `mint` and `withdraw` functions must behave as **EXACT_OUT** functions, retu
 ### Flashloan Incompatibility
 
 In terms of all ERC4626 vaults, there is an [inherent incompatibility](https://docs.morpho.org/morpho-vaults/tutorials/vault-token-asset/) related to flash loans. When an ERC4626 is deposited into a contract that can be flashloaned, an issue arises where a user can frontrun bad debt socialization by flashloaning the shares and then withdrawing them, which amplifies the bad debt. This is limited by the amount available to flashloan AND withdrawable liquidity in the pool.
+
+### How to Run Tests
+
+#### Prerequisites
+
+1. Install [Yarn](https://classic.yarnpkg.com/en/docs/install)
+2. Install [Foundry](https://book.getfoundry.sh/getting-started/installation)
+3. Install dependencies:
+   ```bash
+   yarn install
+   ```
+4. Create a `.env` file in the root of the project and add the RPC URL for the chain you want to test. The supported
+   environment variables are listed in `foundry.toml` under `[rpc_endpoints]`. For example, to test on Mainnet:
+   ```
+   MAINNET_RPC_URL=https://your-mainnet-rpc-url
+   ```
+
+#### Running a Test
+
+1. Export the required environment variables in your terminal:
+   ```bash
+   source .env
+   ```
+   Or export them directly:
+   ```bash
+   export MAINNET_RPC_URL=https://your-mainnet-rpc-url
+   ```
+
+2. Run the test with `yarn test:forge`. Use `--match-contract` or `--mc` if you need to target a specific test contract, locally. Also, use `-vvv` for debugging, if needed:
+   ```bash
+   yarn test:forge --mc ERC4626MainnetMorphoKpkUsdcYield
+   ```
+   Replace `ERC4626MainnetMorphoKpkUsdcYield` with the name of the test contract you want to run (i.e., the
+   `contract` name defined in the `.t.sol` file).
+
+#### Adding a New Test
+
+To add a test for a new ERC4626 token, duplicate an existing test file from the corresponding chain folder inside
+`test/` (e.g., `test/mainnet/`, `test/arbitrum/`) and update the following:
+
+1. Contract name — Rename the contract to match your new file (e.g., `ERC4626MainnetMyTokenTest`).
+2. `forkState.network` — Set this to the chain where the token is deployed (e.g., `"mainnet"`, `"arbitrum"`,
+   `"base"`). The supported networks are listed in `ERC4626WrapperBase.t.sol`.
+3. `erc4626State.wrapper` — Set this to the address of the ERC4626 wrapper (vault) contract you want to test.
+4. `erc4626State.underlyingDonor` — Set this to the address of a whale that holds a large balance of the underlying token (i.e., the asset returned by `wrapper.asset()`). The donor must hold at least `3 * amountToDonate` of the underlying token at the fork block number. You can find suitable donors by checking the top holders of the underlying token on a block explorer (e.g., Etherscan).
+5. `erc4626State.amountToDonate` — Adjust if the underlying token has non-standard decimals or if the default `1e6 * 1e18` is not appropriate.
