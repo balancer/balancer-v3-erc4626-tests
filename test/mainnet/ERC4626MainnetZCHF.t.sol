@@ -8,7 +8,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626MainnetMorphoWethTest is ERC4626WrapperBaseTest {
+contract ERC4626MainnetSavingsVaultZCHFTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
         forkState.network = "mainnet";
