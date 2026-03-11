@@ -22,11 +22,10 @@ contract ERC4626SonicSiloVaultUSDCOpenTest is ERC4626WrapperBaseTest {
         erc4626State.underlyingDonor = 0x7Ca1F5C11e298b8e5F6D8DdCC685a90c95DD8B44;
         erc4626State.amountToDonate = 1e6 * 1e6;
 
-        // By default Silo V2 uses 21 decimals for their ERC4626 implementation.
-        // Specifically to support balancer boosted pools, they've deployed markets with 18 decimals that truncate
-        // the last 3 decimal places. Since the additional 3 digits of precision are always 0 and only used as an
-        // additional layer of security against first deposit attacks, it does not impact the functioning of the market.
-        // As such, the conversion rate is 1:1000, which we account for here by overwriting underlyingToWrappedFactor
-        erc4626State.underlyingToWrappedFactor = 1000;
+        // Silo uses 24 decimals for this ERC4626 implementation.
+        // The additional 6 digits of precision are always 0 and only used as an additional layer of security against
+        // first deposit attacks, it does not impact the functioning of the market. As such, the conversion rate is
+        // 1:1000000, which we account for here by overwriting underlyingToWrappedFactor
+        erc4626State.underlyingToWrappedFactor = 1000000;
     }
 }
