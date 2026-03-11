@@ -500,7 +500,12 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         vm.startPrank(receiver);
         $.underlyingToken.forceApprove(address($.wrapper), initialDeposit);
-        $.wrapper.deposit(initialDeposit, receiver);
+        try $.wrapper.deposit(initialDeposit, receiver) {} catch {
+            revert(
+                "Wrapper deposit failed during wallet initialization. "
+                "This wrapper may use a 2-step deposit mechanism that is incompatible with these tests and the buffer infrastructure."
+            );
+        }
         vm.stopPrank();
     }
 
@@ -566,6 +571,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
         } else if (_compareStrings(forkState.network, "plasma")) {
             forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 1706690;
+            permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
+            bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
+            vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);
+        } else if (_compareStrings(forkState.network, "monad")) {
+            forkState.blockNumber = forkState.blockNumber != 0 ? forkState.blockNumber : 51731941;
             permit2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
             bufferRouter = IBufferRouter(0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8);
             vault = IVault(0xbA1333333333a1BA1108E8412f11850A5C319bA9);

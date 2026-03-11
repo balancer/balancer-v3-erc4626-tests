@@ -8,18 +8,18 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
-contract ERC4626GnosisAaveEureTest is ERC4626WrapperBaseTest {
+contract ERC4626MainnetMorphoUsdckpkPrime11Test is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
-        forkState.network = "gnosis";
-        forkState.blockNumber = 39035618;
+        forkState.network = "mainnet";
+        forkState.blockNumber = 24549146;
     }
 
     function _setUpForkTestVariables() internal pure override returns (ERC4626SetupState memory erc4626State) {
-        // Aave's EURe
-        erc4626State.wrapper = IERC4626(0x417bc5b940475203A18C2f320a5ba470D6c5E463);
-        // Donor of EURe
-        erc4626State.underlyingDonor = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-        erc4626State.amountToDonate = 1e5 * 1e6;
+        // Morpho's kpk USDC
+        erc4626State.wrapper = IERC4626(0xe108fbc04852B5df72f9E44d7C29F47e7A993aDd);
+        // Donor of USDC tokens
+        erc4626State.underlyingDonor = 0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341;
+        erc4626State.amountToDonate = 1e6 * 1e6;
     }
 }
