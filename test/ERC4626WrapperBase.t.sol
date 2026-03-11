@@ -147,6 +147,36 @@ abstract contract ERC4626WrapperBaseTest is Test {
         assertLe($.wrapper.decimals(), 18, "Wrapper has more than 18 decimals.");
     }
 
+    function testMaxDepositNonZeroForVaultAddress() public view {
+        assertNotEq($.wrapper.maxDeposit(address(vault)), 0, "maxDeposit is 0 for vault");
+    }
+
+    function testMaxMintNonZeroForVaultAddress() public view {
+        assertNotEq($.wrapper.maxMint(address(vault)), 0, "maxMint is 0 for vault");
+    }
+
+    function testMaxWithdrawNonZeroForVaultAddress() public {
+        // Give the Balancer Vault a share balance so maxWithdraw is meaningful.
+        uint256 amount = $.minDeposit;
+        vm.startPrank(user);
+        $.underlyingToken.forceApprove(address($.wrapper), amount);
+        $.wrapper.deposit(amount, address(vault));
+        vm.stopPrank();
+
+        assertNotEq($.wrapper.maxWithdraw(address(vault)), 0, "maxWithdraw is 0 for vault");
+    }
+
+    function testMaxRedeemNonZeroForVaultAddress() public {
+        // Give the Balancer Vault a share balance so maxRedeem is meaningful.
+        uint256 amount = $.minDeposit;
+        vm.startPrank(user);
+        $.underlyingToken.forceApprove(address($.wrapper), amount);
+        $.wrapper.deposit(amount, address(vault));
+        vm.stopPrank();
+
+        assertNotEq($.wrapper.maxRedeem(address(vault)), 0, "maxRedeem is 0 for vault");
+    }
+
     function testDeposit__Fork__Fuzz(uint256 amountToDeposit) public {
         amountToDeposit = bound(amountToDeposit, $.minDeposit, userInitialUnderlying);
 
