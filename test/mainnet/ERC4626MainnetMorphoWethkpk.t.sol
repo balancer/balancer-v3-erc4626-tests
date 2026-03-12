@@ -8,7 +8,6 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import { ERC4626WrapperBaseTest, ERC4626SetupState, ForkState } from "../ERC4626WrapperBase.t.sol";
 
-/// @dev Blacklisted because `max...` operations return 0.
 contract ERC4626MainnetMorphoWethkpkTest is ERC4626WrapperBaseTest {
     function _setupFork() internal pure override returns (ForkState memory forkState) {
         // Notice that when executing this function, the fork has not yet been created, so all chain states are empty.
@@ -22,5 +21,8 @@ contract ERC4626MainnetMorphoWethkpkTest is ERC4626WrapperBaseTest {
         // Donor of WETH tokens
         erc4626State.underlyingDonor = 0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8;
         erc4626State.amountToDonate = 1e3 * 1e18;
+
+        // maxDeposit and maxWithdraw are not supported for this wrapper, and this is solved off-chain by the SOR.
+        erc4626State.skipMaxTests = true;
     }
 }

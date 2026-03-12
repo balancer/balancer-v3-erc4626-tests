@@ -36,6 +36,7 @@ struct ERC4626SetupState {
     uint256 amountToDonate;
     uint256 minDeposit;
     uint256 underlyingToWrappedFactor;
+    bool skipMaxTests;
 }
 
 /**
@@ -147,15 +148,18 @@ abstract contract ERC4626WrapperBaseTest is Test {
         assertLe($.wrapper.decimals(), 18, "Wrapper has more than 18 decimals.");
     }
 
-    function testMaxDepositNonZeroForVaultAddress() public view {
+    function testMaxDepositNonZeroForVaultAddress() public {
+        vm.skip($.skipMaxTests);
         assertNotEq($.wrapper.maxDeposit(address(vault)), 0, "maxDeposit is 0 for vault");
     }
 
-    function testMaxMintNonZeroForVaultAddress() public view {
+    function testMaxMintNonZeroForVaultAddress() public {
+        vm.skip($.skipMaxTests);
         assertNotEq($.wrapper.maxMint(address(vault)), 0, "maxMint is 0 for vault");
     }
 
     function testMaxWithdrawNonZeroForVaultAddress() public {
+        vm.skip($.skipMaxTests);
         // Give the Balancer Vault a share balance so maxWithdraw is meaningful.
         uint256 amount = $.minDeposit;
         vm.startPrank(user);
@@ -167,6 +171,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
     }
 
     function testMaxRedeemNonZeroForVaultAddress() public {
+        vm.skip($.skipMaxTests);
         // Give the Balancer Vault a share balance so maxRedeem is meaningful.
         uint256 amount = $.minDeposit;
         vm.startPrank(user);
