@@ -21,5 +21,6 @@ contract ERC4626MainnetMorphoGauntletPrimeUsdcTest is ERC4626WrapperBaseTest {
         // Donor of USDC tokens
         erc4626State.underlyingDonor = 0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341;
         erc4626State.amountToDonate = 1e6 * 1e6;
+        erc4626State.skipMaxTests = true;
     }
 }

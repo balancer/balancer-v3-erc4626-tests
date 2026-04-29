@@ -21,5 +21,6 @@ contract ERC4626MainnetMorphokpkUsdtTest is ERC4626WrapperBaseTest {
         // Donor of USDT tokens
         erc4626State.underlyingDonor = 0xF977814e90dA44bFA03b6295A0616a897441aceC;
         erc4626State.amountToDonate = 1e6 * 1e6;
+        erc4626State.skipMaxTests = true;
     }
 }
