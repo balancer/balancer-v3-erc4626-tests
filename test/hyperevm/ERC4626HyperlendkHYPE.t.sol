@@ -20,7 +20,7 @@ contract ERC4626HyperlendkHYPE is ERC4626WrapperBaseTest {
         erc4626State.wrapper = IERC4626(0xb2A2104D9fC202a38d74d8F6c3c45Da6eef8F5e0);
 
         // Donor of kHYPE
-        erc4626State.underlyingDonor = 0x68e37dE8d93d3496ae143F2E900490f6280C57cD;
+        erc4626State.underlyingDonor = 0xa55DE93CDE5A34c5521B7584022846829CB74366;
         erc4626State.amountToDonate = 1e6 * 1e18;
     }
 }
