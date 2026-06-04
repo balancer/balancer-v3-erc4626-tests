@@ -28,6 +28,8 @@ struct ForkState {
  * @param minDeposit Some ERC4626 protocols require a minimum amount of underlying tokens to deposit
  * @param underlyingToWrappedFactor Some ERC4626 protocols use a different amount of decimals between underlying and
  * the wrapper. This factor scales underlying decimals to wrapper decimals
+ * @param skipTime How much time to skip during setup; defaults to 1 day. Tokens that read from an oracle with a
+ * tight staleness window may need a smaller value to keep the feed fresh
  */
 struct ERC4626SetupState {
     IERC4626 wrapper;
@@ -37,6 +39,7 @@ struct ERC4626SetupState {
     uint256 minDeposit;
     uint256 underlyingToWrappedFactor;
     bool skipMaxTests;
+    uint256 skipTime;
 }
 
 /**
@@ -99,7 +102,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
 
         // Some tokens might have weird interest accrual mechanisms that get reset on transfers.
         // Waiting some time might reveal inconsistencies in these tokens.
-        skip(1 days);
+        skip($.skipTime);
     }
 
     function _setupERC4626State() private {
@@ -119,6 +122,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         $.underlyingToWrappedFactor = $.underlyingToWrappedFactor == 0
             ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
             : $.underlyingToWrappedFactor;
+        $.skipTime = $.skipTime == 0 ? 1 days : $.skipTime;
     }
 
     /**

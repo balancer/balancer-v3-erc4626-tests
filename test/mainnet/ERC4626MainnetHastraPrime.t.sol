@@ -21,5 +21,9 @@ contract ERC4626MainnetHastraPrimeTest is ERC4626WrapperBaseTest {
         // Donor of wYLDS tokens
         erc4626State.underlyingDonor = 0x82E5871654b7635A5e3e8B9DDae019Dd3732e866;
         erc4626State.amountToDonate = 1e4 * 1e6;
+        // PRIME reads its rate from a Hastra FeedVerifier backed by a Chainlink Data Streams feed with a 1-hour
+        // staleness window. The default 1-day skip pushes the cached report past that window, reverting the rate
+        // path; 30 minutes keeps the feed fresh.
+        erc4626State.skipTime = 30 minutes;
     }
 }
