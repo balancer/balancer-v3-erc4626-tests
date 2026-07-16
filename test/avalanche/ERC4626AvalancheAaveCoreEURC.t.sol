@@ -20,6 +20,9 @@ contract ERC4626AvalancheAaveCoreEURCTest is ERC4626WrapperBaseTest {
         erc4626State.wrapper = IERC4626(0x7b538a1840EAf2Ed92EEB67eE744AE627335e201);
         // Donor of EURC tokens
         erc4626State.underlyingDonor = 0xBF14DB80D9275FB721383a77C00Ae180fc40ae98;
-        erc4626State.amountToDonate = 1e5 * 1e6;
+        // Each of the 3 wallets is donated `amountToDonate` and deposits half of it, so 60K donated means 30K wrapped
+        // per wallet, i.e. 90K wrapped across the test. The Aave Core EURC market at this block has a 150K supply cap,
+        // so increasing the donation further would exhaust the cap and revert with AddCapExceeded.
+        erc4626State.amountToDonate = 6e4 * 1e6;
     }
 }
