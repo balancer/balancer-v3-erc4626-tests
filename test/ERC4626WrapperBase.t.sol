@@ -52,11 +52,12 @@ abstract contract ERC4626WrapperBaseTest is Test {
     using FixedPoint for uint256;
 
     uint128 internal constant _MAX_UINT128 = type(uint128).max;
-    uint256 internal constant _BUFFER_MINIMUM_TOTAL_SUPPLY = 1e6;
 
     IBufferRouter internal bufferRouter;
     IVault internal vault;
     IPermit2 internal permit2;
+
+    uint256 internal _bufferMinimumTotalSupply;
 
     ERC4626SetupState internal $;
     uint256 private userInitialUnderlying;
@@ -75,6 +76,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
         forkState = _configurePermit2AndBufferToNetwork(forkState);
 
         vm.createSelectFork({ blockNumber: forkState.blockNumber, urlOrAlias: forkState.network });
+
+        // Read the buffer minimum from the production vault instead of hardcoding it, so the fuzz bounds always
+        // track the constraint actually enforced by the deployed contract.
+        _bufferMinimumTotalSupply = vault.getBufferMinimumTotalSupply();
 
         _setupERC4626State();
 
@@ -351,11 +356,11 @@ abstract contract ERC4626WrapperBaseTest is Test {
     ) public {
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _bufferMinimumTotalSupply,
             $.underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
-        sharesToIssue = bound(sharesToIssue, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.underlyingToken.balanceOf(lp) / 2);
+        wrappedToInitialize = bound(wrappedToInitialize, _bufferMinimumTotalSupply, $.wrapper.balanceOf(lp) / 10);
+        sharesToIssue = bound(sharesToIssue, _bufferMinimumTotalSupply, $.underlyingToken.balanceOf(lp) / 2);
 
         vm.prank(lp);
         bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
@@ -392,10 +397,10 @@ abstract contract ERC4626WrapperBaseTest is Test {
     ) public {
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _bufferMinimumTotalSupply,
             $.underlyingToken.balanceOf(lp) / 10
         );
-        wrappedToInitialize = bound(wrappedToInitialize, _BUFFER_MINIMUM_TOTAL_SUPPLY, $.wrapper.balanceOf(lp) / 10);
+        wrappedToInitialize = bound(wrappedToInitialize, _bufferMinimumTotalSupply, $.wrapper.balanceOf(lp) / 10);
 
         vm.prank(lp);
         uint256 lpShares = bufferRouter.initializeBuffer($.wrapper, underlyingToInitialize, wrappedToInitialize, 0);
@@ -435,12 +440,12 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 initToAddFactor = 1000;
         underlyingToInitialize = bound(
             underlyingToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _bufferMinimumTotalSupply,
             $.underlyingToken.balanceOf(lp) / initToAddFactor
         );
         wrappedToInitialize = bound(
             wrappedToInitialize,
-            _BUFFER_MINIMUM_TOTAL_SUPPLY,
+            _bufferMinimumTotalSupply,
             $.wrapper.balanceOf(lp) / initToAddFactor
         );
 
