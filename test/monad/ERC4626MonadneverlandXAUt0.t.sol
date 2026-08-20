@@ -21,5 +21,8 @@ contract ERC4626MonadneverlandXAUt0Test is ERC4626WrapperBaseTest {
         // Donor of XAUt0 tokens
         erc4626State.underlyingDonor = 0xf89d7b9c864f589bbF53a82105107622B35EaA40;
         erc4626State.amountToDonate = 5e6;
+        // The XAUt0 market is supply-capped with ~10.75 XAUt0 of headroom, which caps amountToDonate below the
+        // default factor's floor.
+        erc4626State.initToAddFactor = 100;
     }
 }

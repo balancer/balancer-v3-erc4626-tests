@@ -30,6 +30,9 @@ struct ForkState {
  * the wrapper. This factor scales underlying decimals to wrapper decimals
  * @param skipTime How much time to skip during setup; defaults to 1 day. Tokens that read from an oracle with a
  * tight staleness window may need a smaller value to keep the feed fresh
+ * @param initToAddFactor How much liquidity can be added to the buffer on top of the initialized amount, as a
+ * multiple of it; defaults to 1000. It forces amountToDonate >= 2 * initToAddFactor * bufferMinimumTotalSupply,
+ * so wrappers over supply-capped markets may need a smaller value to fit the cap
  */
 struct ERC4626SetupState {
     IERC4626 wrapper;
@@ -40,6 +43,7 @@ struct ERC4626SetupState {
     uint256 underlyingToWrappedFactor;
     bool skipMaxTests;
     uint256 skipTime;
+    uint256 initToAddFactor;
 }
 
 /**
@@ -128,6 +132,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
             ? 10 ** ($.wrapper.decimals() - IERC20Metadata(address($.underlyingToken)).decimals())
             : $.underlyingToWrappedFactor;
         $.skipTime = $.skipTime == 0 ? 1 days : $.skipTime;
+        $.initToAddFactor = $.initToAddFactor == 0 ? 1000 : $.initToAddFactor;
     }
 
     /**
@@ -437,7 +442,7 @@ abstract contract ERC4626WrapperBaseTest is Test {
         uint256 wrappedToInitialize,
         uint256 sharesToIssueAndRemove
     ) public {
-        uint256 initToAddFactor = 1000;
+        uint256 initToAddFactor = $.initToAddFactor;
         underlyingToInitialize = bound(
             underlyingToInitialize,
             _bufferMinimumTotalSupply,
